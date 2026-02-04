@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التحديات الملكية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --bg-dark: #0f172a; --card-dark: #1e293b; --gold: #fbbf24;
+            --blue: #3b82f6; --green: #22c55e; --red: #ef4444; --text: #f8fafc;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text); overflow-x: hidden; }
+        
+        /* Header & Nav */
+        header { 
+            background: rgba(30, 41, 59, 0.98); padding: 10px 5%; 
+            position: fixed; top: 0; width: 100%; z-index: 1000; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 2px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+    .game-area .stats-bar .p-stat small {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    font-weight: bold;
+}
+
+.game-area .stats-bar {
+    position: sticky;
+    top: 90px; /* بعد الهيدر مباشرة */
+    z-index: 10;
+    background-color: var(--card-dark);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+        .user-profile { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); }
+        .nav-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .nav-btn:hover { background: var(--gold); color: #000; }
+        
+        .notification-badge {
+            background: var(--red); color: white; border-radius: 50%; 
+            padding: 2px 6px; font-size: 10px; position: absolute; top: -5px; right: -5px;
+            animation: bounce 1s infinite;
+        }
+
+        .container { max-width: 800px; margin: 90px auto 40px; padding: 0 15px; }
+
+        /* Members List Styles */
+        .search-box {
+            width: 100%; padding: 15px; background: var(--card-dark);
+            border: 1px solid #334155; border-radius: 12px; color: white;
+            margin-bottom: 20px; font-size: 16px; outline: none;
+        }
+        .search-box:focus { border-color: var(--gold); }
+
+        .members-grid { display: flex; flex-direction: column; gap: 10px; }
+        .member-card {
+            background: var(--card-dark); padding: 15px; border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
+        }        .member-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+        .m-info { display: flex; align-items: center; gap: 15px; }
+        .m-avatar { width: 50px; height: 50px; border-radius: 50%; position: relative; }
+        .m-status { 
+            width: 12px; height: 12px; border-radius: 50%; 
+            position: absolute; bottom: 0; right: 0; border: 2px solid var(--card-dark);
+        }
+        .status-online { background: var(--green); }
+        .status-busy { background: var(--red); }
+        .m-details h4 { margin-bottom: 3px; font-size: 1.1rem; }
+        .m-details span { font-size: 0.8rem; color: #94a3b8; }
+        
+        .action-btn {
+            padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; gap: 5px; font-size: 0.9rem;
+        }
+        .btn-challenge { background: linear-gradient(135deg, var(--gold), #d97706); color: black; }
+        .btn-watch { background: #334155; color: white; border: 1px solid #475569; }
+        
+        /* Game Styles */
+        .game-area { display: none; }
+        .stats-bar { 
+            display: flex; justify-content: space-around; background: var(--card-dark); 
+            padding: 15px; border-radius: 15px; margin-bottom: 20px; border-bottom: 4px solid var(--gold);
+            position: relative;
+        }
+        .p-stat { text-align: center; position: relative; }
+        .p-stat img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--gold); }
+        .score { font-size: 22px; font-weight: 900; color: var(--gold); }
+        .q-card { 
+            font-size: 0.8rem;
+            background: var(--card-dark); padding: 25px; border-radius: 20px; 
+            text-align: center; position: relative; border: 1px solid #334155; 
+        }
+        .timer-container { margin: 15px 0; position: relative; }
+        .timer-bg { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; }
+        .timer-fill { width: 100%; height: 100%; background: var(--gold); transition: width 0.1s linear; }
+        .timer-text { 
+            position: absolute; top: -25px; left: 0; color: var(--gold); 
+            font-weight: bold; font-size: 1.2rem;
+        }
+        .players-status {
+            display: flex; justify-content: space-between; margin: 15px 0;
+            background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px;
+        }
+        .player-answer-status {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .answer-indicator {
+            width: 12px; height: 12px; border-radius: 50%;
+        }        .answered { background: var(--green); }
+        .not-answered { background: var(--red); }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .opt-btn { 
+            padding: 15px; background: #334155; color: white; 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; 
+            cursor: pointer; transition: 0.2s; font-size: 1rem;
+        }
+        .opt-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .opt-btn:hover:not(:disabled) { background: var(--blue); }
+        .opt-btn.correct { background: var(--green) !important; color: white; }
+        .opt-btn.wrong { background: var(--red) !important; color: white; }
+        .opt-btn.selected { border: 3px solid var(--gold); }
+        .spectator-badge { 
+            position: absolute; top: 10px; left: 10px; background: var(--red); 
+            padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; display: none;
+        }
+
+        /* Modals */
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); display: none; justify-content: center; 
+            align-items: center; z-index: 2000;
+        }
+        .modal-content { 
+            background: var(--card-dark); padding: 25px; border-radius: 15px; 
+            width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--gold);
+        }
+        .modal-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #334155;
+        }
+        
+        select { 
+            width: 100%; padding: 12px; background: #0f172a; color: white; 
+            border: 1px solid #334155; border-radius: 8px; margin: 15px 0;
+        }
+        
+        .challenge-item { 
+            background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 10px; 
+            border-radius: 8px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-sm { padding: 5px 12px; border-radius: 5px; border: none; cursor: pointer; font-size: 0.8rem; margin-left: 5px; }
+        .btn-accept { background: var(--green); color: white; }
+        .btn-reject { background: var(--red); color: white; }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    </style>
+</head><body>
+
+    <header>
+        <div class="user-profile">
+            <img id="myAvatar" class="user-avatar" src="" style="display:none">
+            <div>
+                <div id="myName" style="font-size: 0.9rem;">زائر</div>
+                <div style="font-size: 0.8rem; color: var(--gold);"><i class="fas fa-gem"></i> <span id="myGems">0</span></div>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="openChallengesModal()" style="position: relative;">
+                <i class="fas fa-swords"></i> التحديات
+                <span id="chalCount" class="notification-badge" style="display:none">0</span>
+            </button>
+            <button class="nav-btn" onclick="logout()">خروج</button>
+        </div>
+    </header>
+
+    <div id="authModal" class="modal" style="display: flex;">
+        <div class="modal-content">
+            <i class="fas fa-crown fa-3x" style="color:var(--gold); margin-bottom:15px"></i>
+            <h3>تسجيل الدخول</h3>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" style="width:100%; padding:12px; margin:10px 0; border-radius:8px; border:none;">
+            <input type="password" id="pass" placeholder="كلمة المرور" style="width:100%; padding:12px; margin:10px 0; border-radius:8px; border:none;">
+            <button class="action-btn btn-challenge" style="width:100%; justify-content:center" onclick="handleLogin()">دخول</button>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div id="membersView">
+            <input type="text" id="searchInput" class="search-box" placeholder="بحث عن عضو..." onkeyup="filterMembers()">
+            <div id="membersList" class="members-grid">
+                <p style="text-align: center; color: #64748b;">جاري تحميل الأعضاء...</p>
+            </div>
+        </div>
+
+        <div id="gameArena" class="game-area">
+            <div class="spectator-badge" id="specBadge">👁️ وضع المشاهدة</div>
+            
+            <div class="stats-bar">
+                <div class="p-stat" id="p1Stat">
+                    <img id="p1Img" src="" onerror="this.src='https://ui-avatars.com/api/?name=لاعب&background=random'">
+                    <div class="score" id="p1Score">0</div>
+                    <small id="p1Name">اللاعب 1</small>
+                </div>
+                <div style="align-self:center; font-weight:bold; color:var(--gold); font-size:2rem">VS</div>
+                <div class="p-stat" id="p2Stat">                    <img id="p2Img" src="" onerror="this.src='https://ui-avatars.com/api/?name=لاعب&background=random'">
+                    <div class="score" id="p2Score">0</div>
+                    <small id="p2Name">اللاعب 2</small>
+                </div>
+            </div>
+
+            <div class="q-card">
+                <div style="display:flex; justify-content:space-between; color:#94a3b8; font-size:0.9rem">
+                    <span id="qCategory">عام</span>
+                    <span id="qCount">1 / 10</span>
+                </div>
+                
+                <div class="timer-container">
+                    <div class="timer-text" id="timerText">10 ثانية</div>
+                    <div class="timer-bg">
+                        <div id="timerBar" class="timer-fill"></div>
+                    </div>
+                </div>
+                
+                <div class="players-status" id="playersStatus">
+                    <div class="player-answer-status">
+                        <span id="p1StatusName">اللاعب 1</span>
+                        <div id="p1StatusIndicator" class="answer-indicator not-answered"></div>
+                    </div>
+                    <div class="player-answer-status">
+                        <span id="p2StatusName">اللاعب 2</span>
+                        <div id="p2StatusIndicator" class="answer-indicator not-answered"></div>
+                    </div>
+                </div>
+                
+                <h2 id="qText" style="margin:20px 0; min-height:60px">...</h2>
+                <div id="optionsGrid" class="options-grid"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="sendChalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تحدي لاعب</h3>
+                <i class="fas fa-times" style="cursor:pointer" onclick="closeModal('sendChalModal')"></i>
+            </div>
+            <div style="margin-bottom:20px">
+                <img id="targetImg" src="" onerror="this.src='https://ui-avatars.com/api/?name=هدف&background=random'" style="width:60px; height:60px; border-radius:50%; border:2px solid var(--gold)">
+                <h4 id="targetName" style="margin-top:10px"></h4>
+            </div>
+            <label>اختر مبلغ التحدي (جواهر)</label>
+            <select id="chalAmount">
+                <option value="5000">0</option>                
+                <option value="50000">1</option>
+                
+            </select>
+            <button class="action-btn btn-challenge" style="width:100%; justify-content:center" onclick="confirmSendChallenge()">إرسال التحدي ⚔️</button>
+        </div>
+    </div>
+
+    <div id="incomingChalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>التحديات الواردة</h3>
+                <i class="fas fa-times" style="cursor:pointer" onclick="closeModal('incomingChalModal')"></i>
+            </div>
+            <div id="challengesList" style="text-align:right">
+                <p style="text-align:center; color:#64748b">لا توجد تحديات حالياً</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, onSnapshot, collection, query, where, getDocs, addDoc, serverTimestamp, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYKCCTcurNcJslrNKqdiJCoIIK-YZArB4",
+            authDomain: "sbaq-fc46f.firebaseapp.com",
+            projectId: "sbaq-fc46f",
+            storageBucket: "sbaq-fc46f.firebasestorage.app",
+            appId: "1:1026865750415:web:0ee39a717bcafaa0d06bfa"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const ADMIN_EMAIL = "hsn5@H.com";
+
+        let currentUser = null;
+        let currentRoomId = null;
+        let selectedTargetUser = null;
+        let isSpectator = false;
+        let gameTimer = null;
+        let timeLeft = 10;
+        let mySelectedAnswer = null;
+        
+        // الأسئلة الـ10 مع خيارات تحتوي على نقاط مختلفة (ليس فقط صح/خطأ)
+        
+        const questions = [
+    // علوم (10 أسئلة)
+    {
+        c: "علوم",
+        q: "ما هو الكوكب الأحمر في مجموعتنا الشمسية؟",
+        o: [
+            {t: "الأرض", s: 20},
+            {t: "المريخ", s: 100},
+            {t: "الزهرة", s: 10},
+            {t: "زحل", s: 0},
+            {t: "عطارد", s: 5},
+            {t: "المشتري", s: 0}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو الغاز الأكثر وفرة في الغلاف الجوي للأرض؟",
+        o: [
+            {t: "الهيدروجين", s: 10},
+            {t: "الأرجون", s: 5},
+            {t: "النيتروجين", s: 100},
+            {t: "الأكسجين", s: 70},
+            {t: "ثاني أكسيد الكربون", s: 30},
+            {t: "الهيليوم", s: 0}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو أصلب مادة طبيعية على وجه الأرض؟",
+        o: [
+            {t: "الياقوت", s: 30},
+            {t: "الكوارتز", s: 40},
+            {t: "الألماس", s: 100},
+            {t: "الذهب", s: 10},
+            {t: "الحديد", s: 60},
+            {t: "الفضة", s: 5}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو أسرع شيء في الكون؟",
+        o: [
+            {t: "الكهرباء", s: 20},
+            {t: "الصاروخ", s: 30},
+            {t: "الطائرة النفاثة", s: 10},
+            {t: "الصوت", s: 50},
+            {t: "السيارة السريعة", s: 5},
+            {t: "الضوء", s: 100}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما الذي يسبب مرض الأنيميا؟",
+        o: [
+            {t: "زيادة البروتين", s: 5},
+            {t: "نقص الكالسيوم", s: 40},
+            {t: "نقص السكر", s: 10},
+            {t: "زيادة الصوديوم", s: 20},
+            {t: "نقص الحديد", s: 100},
+            {t: "نقص الدهون", s: 0}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو العنصر الكيميائي الذي رمزه 'O'؟",
+        o: [
+            {t: "النيتروجين", s: 0},
+            {t: "الأكسجين", s: 100},
+            {t: "الذهب", s: 30},
+            {t: "الهيدروجين", s: 5},
+            {t: "الكربون", s: 10},
+            {t: "الفضة", s: 20}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "كم عدد عظام جسم الإنسان البالغ؟",
+        o: [
+            {t: "150 عظمة", s: 40},
+            {t: "250 عظمة", s: 30},
+            {t: "206 عظمة", s: 100},
+            {t: "300 عظمة", s: 60},
+            {t: "350 عظمة", s: 10},
+            {t: "400 عظمة", s: 0}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو الكوكب الأقرب إلى الشمس؟",
+        o: [
+            {t: "الزهرة", s: 70},
+            {t: "زحل", s: 5},
+            {t: "المشتري", s: 10},
+            {t: "عطارد", s: 100},
+            {t: "المريخ", s: 20},
+            {t: "الأرض", s: 40}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو الغاز الذي تحتاجه النباتات للقيام بعملية البناء الضوئي؟",
+        o: [
+            {t: "الهيليوم", s: 5},
+            {t: "الأكسجين", s: 60},
+            {t: "الأرجون", s: 0},
+            {t: "الهيدروجين", s: 10},
+            {t: "النيتروجين", s: 30},
+            {t: "ثاني أكسيد الكربون", s: 100}
+        ]
+    },
+    {
+        c: "علوم",
+        q: "ما هو المعدن السائل في درجة حرارة الغرفة؟",
+        o: [
+            {t: "النحاس", s: 5},
+            {t: "البوتاسيوم", s: 30},
+            {t: "الذهب", s: 0},
+            {t: "الصوديوم", s: 40},
+            {t: "الزئبق", s: 100},
+            {t: "الحديد", s: 10}
+        ]
+    },
+
+    // تاريخ (10 أسئلة)
+    {
+        c: "تاريخ",
+        q: "من هو القائد المسلم الذي فتح الأندلس؟",
+        o: [
+            {t: "يزيد بن معاوية", s: 0},
+            {t: "عمرو بن العاص", s: 5},
+            {t: "صلاح الدين", s: 10},
+            {t: "موسى بن نُصَير", s: 80},
+            {t: "طارق بن زياد", s: 100},
+            {t: "خالد بن الوليد", s: 30}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "في أي عام وقعت الحرب العالمية الأولى؟",
+        o: [
+            {t: "1945", s: 10},
+            {t: "1905", s: 5},
+            {t: "1914", s: 100},
+            {t: "1918", s: 80},
+            {t: "1920", s: 0},
+            {t: "1939", s: 30}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "من هو أول خليفة في الإسلام؟",
+        o: [
+            {t: "الرسول محمد", s: 10},
+            {t: "علي بن أبي طالب", s: 20},
+            {t: "معاوية بن أبي سفيان", s: 5},
+            {t: "عمر بن الخطاب", s: 70},
+            {t: "عثمان بن عفان", s: 40},
+            {t: "أبو بكر الصديق", s: 100}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "ما هي الحضارة التي بنت الأهرامات في مصر؟",
+        o: [
+            {t: "الإغريق", s: 30},
+            {t: "الآشوريون", s: 5},
+            {t: "الفراعنة", s: 100},
+            {t: "البابليون", s: 10},
+            {t: "الفرس", s: 20},
+            {t: "الرومان", s: 40}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "من هو مؤسس الدولة الأموية؟",
+        o: [
+            {t: "مروان بن الحكم", s: 20},
+            {t: "عبد الملك بن مروان", s: 60},
+            {t: "الوليد بن عبد الملك", s: 30},
+            {t: "معاوية بن أبي سفيان", s: 100},
+            {t: "هشام بن عبد الملك", s: 5},
+            {t: "يزيد بن معاوية", s: 10}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "في أي عام سقطت غرناطة آخر معاقل المسلمين في الأندلس؟",
+        o: [
+            {t: "1600", s: 10},
+            {t: "1492", s: 100},
+            {t: "1300", s: 5},
+            {t: "1400", s: 20},
+            {t: "1453", s: 40},
+            {t: "1500", s: 70}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "من هو القائد المغولي الذي هزم في معركة عين جالوت؟",
+        o: [
+            {t: "تيمورلنك", s: 20},
+            {t: "هولاكو", s: 50},
+            {t: "جنكيز خان", s: 60},
+            {t: "أوقطاي خان", s: 10},
+            {t: "كتبغا", s: 100},
+            {t: "باتو خان", s: 5}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "ما هي الدولة التي استعمرت الهند لمدة قرون؟",
+        o: [
+            {t: "البرتغال", s: 30},
+            {t: "بريطانيا", s: 100},
+            {t: "هولندا", s: 20},
+            {t: "فرنسا", s: 50},
+            {t: "إسبانيا", s: 10},
+            {t: "إيطاليا", s: 5}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "من هو أول رئيس للولايات المتحدة الأمريكية؟",
+        o: [
+            {t: "بنجامين فرانكلين", s: 10},
+            {t: "جورج واشنطن", s: 100},
+            {t: "أندرو جاكسون", s: 5},
+            {t: "توماس جيفرسون", s: 60},
+            {t: "أبراهام لينكولن", s: 40},
+            {t: "جون آدامز", s: 20}
+        ]
+    },
+    {
+        c: "تاريخ",
+        q: "ما هي المدة التي استغرقتها الخلافة العباسية؟",
+        o: [
+            {t: "100 سنة", s: 20},
+            {t: "300 سنة", s: 70},
+            {t: "50 سنة", s: 5},
+            {t: "200 سنة", s: 40},
+            {t: "حوالي 500 سنة", s: 100},
+            {t: "700 سنة", s: 10}
+        ]
+    },
+
+    // جغرافيا (10 أسئلة)
+    {
+        c: "جغرافيا",
+        q: "ما هي أكبر دولة في العالم من حيث المساحة؟",
+        o: [
+            {t: "كندا", s: 90},
+            {t: "أستراليا", s: 30},
+            {t: "الصين", s: 60},
+            {t: "روسيا", s: 100},
+            {t: "البرازيل", s: 40},
+            {t: "الولايات المتحدة", s: 70}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هو أطول نهر في العالم؟",
+        o: [
+            {t: "نهر الغانج", s: 10},
+            {t: "نهر الأمازون", s: 90},
+            {t: "نهر النيل", s: 100},
+            {t: "نهر الفرات", s: 30},
+            {t: "نهر المسيسيبي", s: 50},
+            {t: "نهر الدانوب", s: 20}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هي أعلى قمة جبل في العالم؟",
+        o: [
+            {t: "جبل كانغشينجونغا", s: 50},
+            {t: "جبل كليمنجارو", s: 10},
+            {t: "جبل ماكالو", s: 30},
+            {t: "جبل إفرست", s: 100},
+            {t: "جبل أكونكاجوا", s: 20},
+            {t: "جبل كي 2", s: 70}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هو أكبر محيط في العالم؟",
+        o: [
+            {t: "البحر الأبيض المتوسط", s: 10},
+            {t: "المحيط المتجمد الجنوبي", s: 20},
+            {t: "المحيط الهندي", s: 50},
+            {t: "المحيط الهادئ", s: 100},
+            {t: "المحيط المتجمد الشمالي", s: 30},
+            {t: "المحيط الأطلسي", s: 70}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هي أكبر صحراء في العالم؟",
+        o: [
+            {t: "صحراء جوبي", s: 50},
+            {t: "صحراء أتاكاما", s: 20},
+            {t: "الصحراء الكبرى", s: 100},
+            {t: "صحراء الربع الخالي", s: 70},
+            {t: "صحراء سيبيريا", s: 10},
+            {t: "صحراء كالاهاري", s: 30}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هي عاصمة اليابان؟",
+        o: [
+            {t: "هيروشيما", s: 5},
+            {t: "ناغويا", s: 20},
+            {t: "كيوتو", s: 60},
+            {t: "سابورو", s: 10},
+            {t: "أوساكا", s: 40},
+            {t: "طوكيو", s: 100}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هي الدولة التي تسمى 'أرض الشمس المشرقة'؟",
+        o: [
+            {t: "إندونيسيا", s: 5},
+            {t: "تايلاند", s: 20},
+            {t: "كوريا الجنوبية", s: 40},
+            {t: "اليابان", s: 100},
+            {t: "فييتنام", s: 10},
+            {t: "الصين", s: 60}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هو المضيق الذي يفصل بين أوروبا وأفريقيا؟",
+        o: [
+            {t: "مضيق باب المندب", s: 40},
+            {t: "مضيق البوسفور", s: 20},
+            {t: "مضيق ماجلان", s: 10},
+            {t: "مضيق جبل طارق", s: 100},
+            {t: "مضيق هرمز", s: 60},
+            {t: "مضيق الدردنيل", s: 5}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هي أكبر دولة عربية من حيث المساحة؟",
+        o: [
+            {t: "ليبيا", s: 70},
+            {t: "مصر", s: 30},
+            {t: "الجزائر", s: 100},
+            {t: "السعودية", s: 90},
+            {t: "موريتانيا", s: 40},
+            {t: "السودان", s: 60}
+        ]
+    },
+    {
+        c: "جغرافيا",
+        q: "ما هي الدولة الأكثر سكاناً في العالم؟",
+        o: [
+            {t: "إندونيسيا", s: 40},
+            {t: "الهند", s: 90},
+            {t: "البرازيل", s: 20},
+            {t: "باكستان", s: 30},
+            {t: "الصين", s: 100},
+            {t: "الولايات المتحدة", s: 60}
+        ]
+    },
+
+    // رياضة (10 أسئلة)
+    {
+        c: "رياضة",
+        q: "كم عدد لاعبي كرة القدم في كل فريق؟",
+        o: [
+            {t: "10 لاعبين", s: 60},
+            {t: "8 لاعبين", s: 10},
+            {t: "11 لاعب", s: 100},
+            {t: "13 لاعب", s: 20},
+            {t: "9 لاعبين", s: 30},
+            {t: "12 لاعب", s: 50}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "في أي رياضة يستخدم المضرب والكرة الصفراء؟",
+        o: [
+            {t: "الاسكواش", s: 70},
+            {t: "كرة الطاولة", s: 30},
+            {t: "الجولف", s: 20},
+            {t: "التنس", s: 100},
+            {t: "الريشة الطائرة", s: 50},
+            {t: "الهوكي", s: 10}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "ما هي الرياضة الوطنية في كندا؟",
+        o: [
+            {t: "التزلج", s: 5},
+            {t: "الكرة الطائرة", s: 20},
+            {t: "الجولف", s: 10},
+            {t: "كرة القدم", s: 60},
+            {t: "الهوكي على الجليد", s: 100},
+            {t: "البيسبول", s: 40}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "كم عدد الحكام في مباراة كرة القدم؟",
+        o: [
+            {t: "2 حكم", s: 30},
+            {t: "1 حكم", s: 10},
+            {t: "4 حكام", s: 100},
+            {t: "5 حكام", s: 50},
+            {t: "3 حكام", s: 70},
+            {t: "6 حكام", s: 20}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "ما هي مدة شوط كرة السلة؟",
+        o: [
+            {t: "30 دقيقة", s: 10},
+            {t: "25 دقيقة", s: 20},
+            {t: "12 دقيقة", s: 70},
+            {t: "10 دقائق", s: 100},
+            {t: "15 دقيقة", s: 50},
+            {t: "20 دقيقة", s: 30}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "من هو لاعب كرة القدم البرتغالي الشهير؟",
+        o: [
+            {t: "ديكو", s: 30},
+            {t: "ريكاردو كواريسما", s: 20},
+            {t: "بيبي", s: 50},
+            {t: "كريستيانو رونالدو", s: 100},
+            {t: "راؤول ميريليس", s: 10},
+            {t: "لويس فيجو", s: 70}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "في أي رياضة توجد كلمة 'سومو'؟",
+        o: [
+            {t: "الكاراتيه", s: 40},
+            {t: "الجودو", s: 60},
+            {t: "المصارعة الحرة", s: 10},
+            {t: "التايكواندو", s: 5},
+            {t: "الملاكمة", s: 20},
+            {t: "المصارعة اليابانية", s: 100}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "ما هي الرياضة التي تلعب على العشب الأخضر بكرة بيضاء؟",
+        o: [
+            {t: "الكريكت", s: 70},
+            {t: "الجولف", s: 100},
+            {t: "التنس", s: 10},
+            {t: "البولينج", s: 50},
+            {t: "البيسبول", s: 20},
+            {t: "الهوكي", s: 30}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "كم عدد لاعبي كرة السلة في كل فريق؟",
+        o: [
+            {t: "8 لاعبين", s: 10},
+            {t: "4 لاعبين", s: 20},
+            {t: "7 لاعبين", s: 40},
+            {t: "6 لاعبين", s: 60},
+            {t: "5 لاعبين", s: 100},
+            {t: "9 لاعبين", s: 5}
+        ]
+    },
+    {
+        c: "رياضة",
+        q: "ما هي الرياضة التي يلعبها لاعبان بمضارب وريشة؟",
+        o: [
+            {t: "الجولف", s: 20},
+            {t: "الريشة الطائرة", s: 100},
+            {t: "التنس", s: 70},
+            {t: "الهوكي", s: 10},
+            {t: "كرة الطاولة", s: 30},
+            {t: "الاسكواش", s: 50}
+        ]
+    },
+
+    // ثقافة عامة (10 أسئلة)
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أسرع حيوان بري في العالم؟",
+        o: [
+            {t: "الأسد", s: 40},
+            {t: "الحمار الوحشي", s: 10},
+            {t: "الذئب", s: 20},
+            {t: "الفهد", s: 100},
+            {t: "النمر", s: 30},
+            {t: "الغزال", s: 70}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان في العالم؟",
+        o: [
+            {t: "فرس النهر", s: 30},
+            {t: "الحوت الأزرق", s: 100},
+            {t: "الدب القطبي", s: 10},
+            {t: "الزرافة", s: 50},
+            {t: "وحيد القرن", s: 20},
+            {t: "الفيل", s: 70}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أذكى الحيوانات؟",
+        o: [
+            {t: "الكلب", s: 20},
+            {t: "الببغاء", s: 40},
+            {t: "الدلفين", s: 100},
+            {t: "القط", s: 10},
+            {t: "الشمبانزي", s: 80},
+            {t: "الفيل", s: 60}
+        ]
+    },
+    
+    {
+        c: "ثقافة عامة",
+        q: "ما هو عدد أيام السنة الكبيسة؟",
+        o: [
+            {t: "365 يوم", s: 70},
+            {t: "364 يوم", s: 20},
+            {t: "360 يوم", s: 10},
+            {t: "366 يوم", s: 100},
+            {t: "367 يوم", s: 40},
+            {t: "363 يوم", s: 5}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو الشيء الذي كلما أخذت منه كبر؟",
+        o: [
+            {t: "الصخر", s: 60},
+            {t: "الحفرة", s: 100},
+            {t: "الكتاب", s: 20},
+            {t: "الوقت", s: 5},
+            {t: "البئر", s: 40},
+            {t: "الذاكرة", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أطول جسر في العالم؟",
+        o: [
+            {t: "جسر فورث (بريطانيا)", s: 10},
+            {t: "جسر دانيانغ-كونشان (الصين)", s: 100},
+            {t: "جسر البوابة الذهبية (الولايات المتحدة)", s: 20},
+            {t: "جسر هونغ كونغ-تشوهاي-ماكاو", s: 70},
+            {t: "جسر مانش (بريطانيا-فرنسا)", s: 30},
+            {t: "جسر بحيرة بونتشارترين (الولايات المتحدة)", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أطول مبنى في العالم حالياً؟",
+        o: [
+            {t: "برج سي إن (كندا)", s: 20},
+            {t: "برج خليفة (دبي)", s: 100},
+            {t: "برج إيفل (فرنسا)", s: 10},
+            {t: "أبراج البيت (مكة)", s: 50},
+            {t: "برج تايبيه 101 (تايوان)", s: 30},
+            {t: "برج شنغهاي (الصين)", s: 70}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هي أكبر هضبة في العالم؟",
+        o: [
+            {t: "هضبة الحجاز", s: 20},
+            {t: "هضبة كولورادو", s: 10},
+            {t: "هضبة باتاغونيا", s: 5},
+            {t: "هضبة التبت", s: 100},
+            {t: "هضبة الدكن", s: 40},
+            {t: "هضبة الأناضول", s: 60}
+        ]
+    },
+    
+    {
+        c: "ثقافة عامة",
+        q: "ما هو البحر الذي لا يوجد فيه ماء؟",
+        o: [
+            {t: "بحر العرب", s: 60},
+            {t: "بحر قزوين", s: 10},
+            {t: "بحر اليابان", s: 5},
+            {t: "بحر الشمال", s: 40},
+            {t: "بحر الرمال", s: 100},
+            {t: "بحر البلطيق", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو الشيء الذي يحمل أكثر من 1000 طن ولا يستطيع حمل مسمار؟",
+        o: [
+            {t: "الطائرة", s: 20},
+            {t: "البحر", s: 100},
+            {t: "القطار", s: 5},
+            {t: "الجبل", s: 60},
+            {t: "الشاحنة", s: 10},
+            {t: "السفينة", s: 40}
+        ]
+    },
+    
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم حيوان معروف على وجه الأرض؟",
+        o: [
+            {t: "فرس النهر", s: 10},
+            {t: "قنديل البحر", s: 100},
+            {t: "التمساح", s: 40},
+            {t: "السلحفاة", s: 60},
+            {t: "الحوت", s: 20},
+            {t: "الدولفين", s: 5}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو المعدن الذي يعرف بـ 'الذهب الأبيض'؟",
+        o: [
+            {t: "الفضة", s: 30},
+            {t: "البلاتين", s: 100},
+            {t: "النيكل", s: 20},
+            {t: "القصدير", s: 10},
+            {t: "الزنك", s: 5},
+            {t: "الألومنيوم", s: 1}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أعمق محيط في العالم؟",
+        o: [
+            {t: "المحيط الأطلسي", s: 30},
+            {t: "المحيط الهادئ", s: 100},
+            {t: "المحيط الهندي", s: 50},
+            {t: "المحيط المتجمد الشمالي", s: 20},
+            {t: "المحيط المتجمد الجنوبي", s: 10},
+            {t: "البحر الأبيض المتوسط", s: 5}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر عنصر كيميائي وفرة في الكون؟",
+        o: [
+            {t: "الهيدروجين", s: 100},
+            {t: "الأكسجين", s: 70},
+            {t: "الكربون", s: 50},
+            {t: "النيتروجين", s: 30},
+            {t: "الهيليوم", s: 80},
+            {t: "الحديد", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو المرض المعروف باسم 'الموت الأسود' في العصور الوسطى؟",
+        o: [
+            {t: "الجدري", s: 30},
+            {t: "الطاعون", s: 100},
+            {t: "الكوليرا", s: 50},
+            {t: "الملاريا", s: 40},
+            {t: "السل", s: 20},
+            {t: "الحصبة", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هي أطول شجرة في العالم؟",
+        o: [
+            {t: "شجرة الخشب الأحمر", s: 100},
+            {t: "شجرة الأوكالبتوس", s: 70},
+            {t: "شجرة السيكويا", s: 80},
+            {t: "شجرة البلوط", s: 30},
+            {t: "شجرة الصنوبر", s: 40},
+            {t: "شجرة النخيل", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نادي كرة قدم في العالم؟",
+        o: [
+            {t: "نادي شيفيلد", s: 100},
+            {t: "نادي ريال مدريد", s: 60},
+            {t: "نادي برشلونة", s: 50},
+            {t: "نادي مانشستر يونايتد", s: 30},
+            {t: "نادي أرسنال", s: 20},
+            {t: "نادي يوفنتوس", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هي أقدم جامعة في العالم؟",
+        o: [
+            {t: "جامعة بولونيا", s: 60},
+            {t: "جامعة الأزهر", s: 70},
+            {t: "جامعة القرويين", s: 100},
+            {t: "جامعة أكسفورد", s: 80},
+            {t: "جامعة السوربون", s: 50},
+            {t: "جامعة هارفارد", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر خليج في العالم؟",
+        o: [
+            {t: "خليج المكسيك", s: 80},
+            {t: "خليج البنغال", s: 100},
+            {t: "خليج عمان", s: 30},
+            {t: "خليج هدسون", s: 60},
+            {t: "خليج غينيا", s: 40},
+            {t: "خليج العقبة", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر فاكهة استهلاكاً في العالم؟",
+        o: [
+            {t: "الموز", s: 100},
+            {t: "التفاح", s: 80},
+            {t: "البرتقال", s: 70},
+            {t: "العنب", s: 50},
+            {t: "الفراولة", s: 30},
+            {t: "المانجو", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أطول نفق في العالم؟",
+        o: [
+            {t: "نفق غوتهارد (سويسرا)", s: 100},
+            {t: "نفق بحر المانش (بريطانيا-فرنسا)", s: 80},
+            {t: "نفق سيكان (اليابان)", s: 70},
+            {t: "نفق ليردال (النرويج)", s: 60},
+            {t: "نفق غوانجيلونغ (الصين)", s: 50},
+            {t: "نفق مونت بلانك (إيطاليا-فرنسا)", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر ثعبان في العالم؟",
+        o: [
+            {t: "الثعبان الشبكي", s: 100},
+            {t: "أناكوندا", s: 90},
+            {t: "ثعبان الكوبرا", s: 30},
+            {t: "ثعبان الأصلة", s: 60},
+            {t: "ثعبان السجاد", s: 20},
+            {t: "ثعبان الجرذان", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر اللغات تحدثاً في العالم؟",
+        o: [
+            {t: "الإنجليزية", s: 80},
+            {t: "الإسبانية", s: 70},
+            {t: "الصينية المندرينية", s: 100},
+            {t: "الهندية", s: 60},
+            {t: "العربية", s: 50},
+            {t: "البرتغالية", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم خط كتابة معروف في التاريخ؟",
+        o: [
+            {t: "الهيروغليفية", s: 70},
+            {t: "الكتابة المسمارية", s: 100},
+            {t: "الكتابة الصينية", s: 60},
+            {t: "الكتابة السنسكريتية", s: 40},
+            {t: "الكتابة اللاتينية", s: 30},
+            {t: "الكتابة العربية", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر صرح ديني في العالم؟",
+        o: [
+            {t: "كاتدرائية القديس بطرس (الفاتيكان)", s: 70},
+            {t: "المسجد الحرام (مكة)", s: 100},
+            {t: "كاتدرائية سيجوفيا (إسبانيا)", s: 40},
+            {t: "معبد أنغكور وات (كمبوديا)", s: 80},
+            {t: "كاتدرائية القديس بولس (بريطانيا)", s: 50},
+            {t: "مسجد الشيخ زايد (الإمارات)", s: 60}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر متحف في العالم؟",
+        o: [
+            {t: "متحف اللوفر (فرنسا)", s: 100},
+            {t: "المتحف البريطاني (بريطانيا)", s: 90},
+            {t: "متحف المتروبوليتان (الولايات المتحدة)", s: 80},
+            {t: "متحف هيرميتاج (روسيا)", s: 70},
+            {t: "المتحف المصري (مصر)", s: 60},
+            {t: "متحف سميثسونيان (الولايات المتحدة)", s: 85}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم مشروب كحولي في العالم؟",
+        o: [
+            {t: "البيرة", s: 100},
+            {t: "النبيذ", s: 90},
+            {t: "الويسكي", s: 60},
+            {t: "الفودكا", s: 50},
+            {t: "الشمبانيا", s: 40},
+            {t: "العرق", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أضخم طائر لا يطير في العالم؟",
+        o: [
+            {t: "النعامة", s: 100},
+            {t: "الإيمو", s: 80},
+            {t: "الكيوي", s: 50},
+            {t: "البطريق", s: 60},
+            {t: "الرية", s: 70},
+            {t: "الكاسواري", s: 65}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر الحيوانات القاتلة للإنسان؟",
+        o: [
+            {t: "الأسد", s: 30},
+            {t: "الفيل", s: 20},
+            {t: "التمساح", s: 40},
+            {t: "البعوض", s: 100},
+            {t: "الأفعى", s: 60},
+            {t: "القرش", s: 10}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر بحيرة للمياه العذبة في العالم؟",
+        o: [
+            {t: "بحيرة بايكال", s: 80},
+            {t: "بحيرة سوبيريور", s: 100},
+            {t: "بحيرة فيكتوريا", s: 70},
+            {t: "بحيرة تنجانيقا", s: 60},
+            {t: "بحيرة ميشيغان", s: 50},
+            {t: "بحيرة هرون", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم في العالم؟",
+        o: [
+            {t: "علم الدنمارك", s: 100},
+            {t: "علم بريطانيا", s: 80},
+            {t: "علم الولايات المتحدة", s: 50},
+            {t: "علم فرنسا", s: 60},
+            {t: "علم اليابان", s: 70},
+            {t: "علم الصين", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر معدن ثمين استخداماً في المجوهرات؟",
+        o: [
+            {t: "الذهب", s: 100},
+            {t: "الفضة", s: 80},
+            {t: "البلاتين", s: 70},
+            {t: "البلاديوم", s: 50},
+            {t: "الروديوم", s: 40},
+            {t: "التيتانيوم", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان بري في أفريقيا؟",
+        o: [
+            {t: "الفيل الأفريقي", s: 100},
+            {t: "وحيد القرن", s: 70},
+            {t: "فرس النهر", s: 80},
+            {t: "الزرافة", s: 60},
+            {t: "الأسد", s: 40},
+            {t: "النمر", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أطول نهر في أوروبا؟",
+        o: [
+            {t: "نهر الدانوب", s: 60},
+            {t: "نهر الفولجا", s: 100},
+            {t: "نهر الراين", s: 70},
+            {t: "نهر السين", s: 40},
+            {t: "نهر التايمز", s: 30},
+            {t: "نهر الأورال", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر طائر مهاجر في العالم؟",
+        o: [
+            {t: "اللقلق", s: 60},
+            {t: "البط البري", s: 70},
+            {t: "السنونو", s: 80},
+            {t: "القطرس الجوال", s: 100},
+            {t: "العقاب", s: 40},
+            {t: "الصقر", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم مطعم في العالم؟",
+        o: [
+            {t: "مطعم Botín (إسبانيا)", s: 100},
+            {t: "مطعم St. Peter (النمسا)", s: 80},
+            {t: "مطعم La Tour d'Argent (فرنسا)", s: 70},
+            {t: "مطعم Rules (بريطانيا)", s: 60},
+            {t: "مطعم Antico Caffè Greco (إيطاليا)", s: 50},
+            {t: "مطعم Zum Franziskaner (ألمانيا)", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر بركان في العالم؟",
+        o: [
+            {t: "بركان كيلاويا (هاواي)", s: 70},
+            {t: "بركان ماونا لوا (هاواي)", s: 100},
+            {t: "بركان فيزوف (إيطاليا)", s: 40},
+            {t: "بركان إتنا (إيطاليا)", s: 50},
+            {t: "بركان سانت هيلين (الولايات المتحدة)", s: 30},
+            {t: "بركان كراكاتوا (إندونيسيا)", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم خط سكة حديد في العالم؟",
+        o: [
+            {t: "خط ليفربول-مانشستر (بريطانيا)", s: 100},
+            {t: "خط باريس-ليون (فرنسا)", s: 70},
+            {t: "خط نيويورك-فيلادلفيا (الولايات المتحدة)", s: 60},
+            {t: "خط طوكيو-يوكوهاما (اليابان)", s: 50},
+            {t: "خط موسكو-سانت بطرسبرغ (روسيا)", s: 40},
+            {t: "خط القاهرة-الإسكندرية (مصر)", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان بحري يأكل العشب؟",
+        o: [
+            {t: "الحوت الأزرق", s: 20},
+            {t: "أبقار البحر", s: 100},
+            {t: "أسد البحر", s: 30},
+            {t: "الفقمة", s: 40},
+            {t: "الدولفين", s: 10},
+            {t: "سمك القرش", s: 5}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم مبنى حجري في العالم؟",
+        o: [
+            {t: "أهرامات الجيزة", s: 70},
+            {t: "ستونهنج (بريطانيا)", s: 100},
+            {t: "كولوسيوم (إيطاليا)", s: 50},
+            {t: "تاج محل (الهند)", s: 40},
+            {t: "سور الصين العظيم", s: 60},
+            {t: "البتراء (الأردن)", s: 55}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر العناصر الغذائية التي يحتاجها جسم الإنسان؟",
+        o: [
+            {t: "الكربوهيدرات", s: 70},
+            {t: "البروتينات", s: 60},
+            {t: "الدهون", s: 40},
+            {t: "الماء", s: 100},
+            {t: "الفيتامينات", s: 50},
+            {t: "المعادن", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر خزان للمياه الجوفية في العالم؟",
+        o: [
+            {t: "الحوض الجوفي النوبي (إفريقيا)", s: 100},
+            {t: "حوض الأمازون (أمريكا الجنوبية)", s: 80},
+            {t: "الحوض الأرتوازي (أستراليا)", s: 70},
+            {t: "حوض الغانج (الهند)", s: 60},
+            {t: "حوض المسيسيبي (الولايات المتحدة)", s: 50},
+            {t: "حوض الكونغو (إفريقيا)", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم مهرجان سينمائي في العالم؟",
+        o: [
+            {t: "مهرجان كان (فرنسا)", s: 70},
+            {t: "مهرجان البندقية (إيطاليا)", s: 100},
+            {t: "مهرجان برلين (ألمانيا)", s: 80},
+            {t: "مهرجان تورونتو (كندا)", s: 60},
+            {t: "مهرجان ساندانس (الولايات المتحدة)", s: 50},
+            {t: "مهرجان طهران (إيران)", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر وأضخم نجم في مجرتنا؟",
+        o: [
+            {t: "الشمس", s: 20},
+            {t: "بولاريس", s: 40},
+            {t: "سيريوس", s: 60},
+            {t: "رجل الجبار", s: 100},
+            {t: "فيجا", s: 50},
+            {t: "كانوب", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نظام كتابة لا يزال مستخدماً حتى اليوم؟",
+        o: [
+            {t: "الكتابة الصينية", s: 100},
+            {t: "الكتابة العربية", s: 70},
+            {t: "الكتابة اللاتينية", s: 80},
+            {t: "الكتابة السيريلية", s: 60},
+            {t: "الكتابة العبرية", s: 50},
+            {t: "الكتابة اليونانية", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر نظام كهوف في العالم؟",
+        o: [
+            {t: "كهوف كارست (الصين)", s: 70},
+            {t: "كهوف ماموث (الولايات المتحدة)", s: 100},
+            {t: "كهوف وايتومو (نيوزيلندا)", s: 50},
+            {t: "كهوف بويرتو برنسيسا (الفلبين)", s: 60},
+            {t: "كهوف سكوكجان (سلوفينيا)", s: 40},
+            {t: "كهوف جعيتا (لبنان)", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم حيوان أليف في التاريخ؟",
+        o: [
+            {t: "القط", s: 70},
+            {t: "الكلب", s: 100},
+            {t: "الحصان", s: 60},
+            {t: "العصفور", s: 30},
+            {t: "الأسماك", s: 40},
+            {t: "الأرانب", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الصحراء؟",
+        o: [
+            {t: "الجمل", s: 100},
+            {t: "الثعلب", s: 60},
+            {t: "الغزال", s: 70},
+            {t: "العقرب", s: 40},
+            {t: "الأفعى", s: 50},
+            {t: "السحلية", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم متحف فني في العالم؟",
+        o: [
+            {t: "متحف اللوفر (فرنسا)", s: 100},
+            {t: "متحف أوفيزي (إيطاليا)", s: 90},
+            {t: "المتحف البريطاني (بريطانيا)", s: 80},
+            {t: "متحف برادو (إسبانيا)", s: 70},
+            {t: "متحف ريجكس (هولندا)", s: 60},
+            {t: "متحف الأرميتاج (روسيا)", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكثر سلالات الكلاب شعبية في العالم؟",
+        o: [
+            {t: "الجيرمن شيبرد", s: 70},
+            {t: "اللابرادور", s: 100},
+            {t: "الجولدن ريتريفر", s: 80},
+            {t: "البودل", s: 60},
+            {t: "البولدوج", s: 50},
+            {t: "البيجل", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر جزيرة في البحر الأبيض المتوسط؟",
+        o: [
+            {t: "صقلية", s: 100},
+            {t: "سردينيا", s: 80},
+            {t: "قبرص", s: 70},
+            {t: "كريت", s: 60},
+            {t: "كورسيكا", s: 50},
+            {t: "مالطا", s: 30}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم مكتبة في العالم؟",
+        o: [
+            {t: "مكتبة الإسكندرية", s: 100},
+            {t: "مكتبة الكونغرس", s: 70},
+            {t: "مكتبة بودليان", s: 80},
+            {t: "مكتبة الفاتيكان", s: 90},
+            {t: "مكتبة نيويورك العامة", s: 60},
+            {t: "مكتبة فرنسا الوطنية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر ميناء في العالم؟",
+        o: [
+            {t: "ميناء شنغهاي (الصين)", s: 100},
+            {t: "ميناء سنغافورة", s: 90},
+            {t: "ميناء روتردام (هولندا)", s: 80},
+            {t: "ميناء طيانجين (الصين)", s: 70},
+            {t: "ميناء غوانغتشو (الصين)", s: 60},
+            {t: "ميناء بوسان (كوريا الجنوبية)", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم سوق في العالم؟",
+        o: [
+            {t: "سوق خان الخليلي (مصر)", s: 100},
+            {t: "سوق جراند بازار (تركيا)", s: 90},
+            {t: "سوق كوفنت جاردن (بريطانيا)", s: 60},
+            {t: "سوق لا بوكيريا (إسبانيا)", s: 70},
+            {t: "سوق تسوكيجي (اليابان)", s: 50},
+            {t: "سوق دامن (تايلاند)", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للبن في العالم؟",
+        o: [
+            {t: "البرازيل", s: 100},
+            {t: "فيتنام", s: 80},
+            {t: "كولومبيا", s: 70},
+            {t: "إندونيسيا", s: 60},
+            {t: "إثيوبيا", s: 50},
+            {t: "الهند", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نصب تذكاري في العالم؟",
+        o: [
+            {t: "أهرامات الجيزة", s: 100},
+            {t: "تاج محل", s: 60},
+            {t: "سور الصين العظيم", s: 70},
+            {t: "كولوسيوم", s: 50},
+            {t: "ماتشو بيتشو", s: 40},
+            {t: "ستونهنج", s: 80}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر نهر في آسيا؟",
+        o: [
+            {t: "نهر اليانغتسي", s: 100},
+            {t: "نهر الغانج", s: 70},
+            {t: "نهر السند", s: 60},
+            {t: "نهر هوانغ هي", s: 80},
+            {t: "نهر الميكونغ", s: 50},
+            {t: "نهر براهمابوترا", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم فلك معروف؟",
+        o: [
+            {t: "الفلك البابلي", s: 100},
+            {t: "الفلك المصري", s: 90},
+            {t: "الفلك الصيني", s: 80},
+            {t: "الفلك اليوناني", s: 70},
+            {t: "الفلك الهندي", s: 60},
+            {t: "الفلك العربي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر محمية طبيعية في العالم؟",
+        o: [
+            {t: "منتزه غرينلاند الوطني", s: 100},
+            {t: "منتزه كروغر (جنوب إفريقيا)", s: 70},
+            {t: "منتزه يلوستون (الولايات المتحدة)", s: 60},
+            {t: "منتزه كانغشانغونغا (الهند)", s: 50},
+            {t: "منتزه كاكادو (أستراليا)", s: 40},
+            {t: "منتزه سيرينجيتي (تنزانيا)", s: 80}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نظام صحي في العالم؟",
+        o: [
+            {t: "الطب الصيني التقليدي", s: 100},
+            {t: "الطب الهندي القديم (أيورفيدا)", s: 90},
+            {t: "الطب اليوناني القديم", s: 80},
+            {t: "الطب العربي", s: 70},
+            {t: "الطب المصري القديم", s: 60},
+            {t: "الطب الفارسي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للذهب في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "أستراليا", s: 90},
+            {t: "روسيا", s: 80},
+            {t: "الولايات المتحدة", s: 70},
+            {t: "كندا", s: 60},
+            {t: "جنوب إفريقيا", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم مسرح في العالم؟",
+        o: [
+            {t: "مسرح ديونيسوس (اليونان)", s: 100},
+            {t: "كولوسيوم (إيطاليا)", s: 90},
+            {t: "مسرح غلوب (بريطانيا)", s: 70},
+            {t: "مسرح لا سكالا (إيطاليا)", s: 60},
+            {t: "مسرح البولشوي (روسيا)", s: 50},
+            {t: "مسرح ميتروبوليتان (الولايات المتحدة)", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الغابة الاستوائية؟",
+        o: [
+            {t: "الفيل", s: 80},
+            {t: "الغوريلا", s: 90},
+            {t: "نمر البنغال", s: 70},
+            {t: "الكسلان", s: 40},
+            {t: "التابير", s: 50},
+            {t: "الغوريلا الجبلية", s: 100}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نوع من الموسيقى؟",
+        o: [
+            {t: "الموسيقى الكلاسيكية", s: 70},
+            {t: "الموسيقى الشعبية", s: 60},
+            {t: "الموسيقى الدينية", s: 100},
+            {t: "الموسيقى الجاز", s: 40},
+            {t: "الموسيقى الروك", s: 30},
+            {t: "الموسيقى البوب", s: 20}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للنفط في العالم؟",
+        o: [
+            {t: "الولايات المتحدة", s: 100},
+            {t: "السعودية", s: 90},
+            {t: "روسيا", s: 80},
+            {t: "كندا", s: 70},
+            {t: "الصين", s: 60},
+            {t: "الإمارات", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نظام تعليمي في العالم؟",
+        o: [
+            {t: "النظام التعليمي المصري القديم", s: 100},
+            {t: "النظام التعليمي الصيني القديم", s: 90},
+            {t: "النظام التعليمي اليوناني", s: 80},
+            {t: "النظام التعليمي الروماني", s: 70},
+            {t: "النظام التعليمي الإسلامي", s: 60},
+            {t: "النظام التعليمي الهندي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في القطب الشمالي؟",
+        o: [
+            {t: "الدب القطبي", s: 100},
+            {t: "الفقمة", s: 80},
+            {t: "الحوت", s: 60},
+            {t: "الرنة", s: 70},
+            {t: "الثعلب القطبي", s: 50},
+            {t: "الذئب القطبي", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم رياضيات؟",
+        o: [
+            {t: "علم الحساب", s: 100},
+            {t: "علم الهندسة", s: 90},
+            {t: "علم الجبر", s: 80},
+            {t: "علم التفاضل والتكامل", s: 70},
+            {t: "علم الإحصاء", s: 60},
+            {t: "علم المنطق", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للقمح في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "الهند", s: 90},
+            {t: "روسيا", s: 80},
+            {t: "الولايات المتحدة", s: 70},
+            {t: "فرنسا", s: 60},
+            {t: "كندا", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نظام حكم في العالم؟",
+        o: [
+            {t: "الملكية المطلقة", s: 100},
+            {t: "الديمقراطية", s: 80},
+            {t: "الجمهورية", s: 70},
+            {t: "الخلافة", s: 90},
+            {t: "الإمبراطورية", s: 60},
+            {t: "السلطنة", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الأنهار؟",
+        o: [
+            {t: "فرس النهر", s: 100},
+            {t: "التمساح", s: 90},
+            {t: "الحوت النهري", s: 80},
+            {t: "سمك السلور", s: 60},
+            {t: "ثعبان البحر", s: 50},
+            {t: "السلحفاة النهرية", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم كيمياء؟",
+        o: [
+            {t: "الكيمياء القديمة (الخيمياء)", s: 100},
+            {t: "الكيمياء العضوية", s: 80},
+            {t: "الكيمياء غير العضوية", s: 70},
+            {t: "الكيمياء التحليلية", s: 60},
+            {t: "الكيمياء الفيزيائية", s: 50},
+            {t: "الكيمياء الحيوية", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للشاي في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "الهند", s: 90},
+            {t: "كينيا", s: 70},
+            {t: "سريلانكا", s: 80},
+            {t: "تركيا", s: 60},
+            {t: "فيتنام", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم نظام كتابة موسيقية؟",
+        o: [
+            {t: "النوتة الموسيقية الغربية", s: 100},
+            {t: "النظام الموسيقي العربي", s: 80},
+            {t: "النظام الموسيقي الهندي", s: 90},
+            {t: "النظام الموسيقي الصيني", s: 70},
+            {t: "النظام الموسيقي الياباني", s: 60},
+            {t: "النظام الموسيقي الإغريقي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الجبال؟",
+        o: [
+            {t: "الماعز الجبلي", s: 80},
+            {t: "الدب الأسود", s: 70},
+            {t: "الأسد الجبلي", s: 60},
+            {t: "الفهود الثلجية", s: 100},
+            {t: "الذئاب", s: 50},
+            {t: "النسور", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم جغرافيا؟",
+        o: [
+            {t: "الجغرافيا اليونانية", s: 100},
+            {t: "الجغرافيا العربية", s: 90},
+            {t: "الجغرافيا الصينية", s: 80},
+            {t: "الجغرافيا الرومانية", s: 70},
+            {t: "الجغرافيا الفارسية", s: 60},
+            {t: "الجغرافيا الهندية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للقطن في العالم؟",
+        o: [
+            {t: "الهند", s: 100},
+            {t: "الصين", s: 90},
+            {t: "الولايات المتحدة", s: 80},
+            {t: "باكستان", s: 70},
+            {t: "البرازيل", s: 60},
+            {t: "أوزبكستان", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم فيزياء؟",
+        o: [
+            {t: "الفيزياء الكلاسيكية", s: 100},
+            {t: "الفيزياء الحديثة", s: 80},
+            {t: "الفيزياء النووية", s: 70},
+            {t: "فيزياء الكم", s: 60},
+            {t: "الفيزياء الفلكية", s: 50},
+            {t: "الفيزياء النظرية", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في السهول؟",
+        o: [
+            {t: "الثور الأمريكي", s: 80},
+            {t: "الحمار الوحشي", s: 70},
+            {t: "الغزال", s: 90},
+            {t: "البيسون", s: 100},
+            {t: "الكنغر", s: 60},
+            {t: "النعام", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم نفس؟",
+        o: [
+            {t: "علم النفس الفلسفي", s: 100},
+            {t: "علم النفس التجريبي", s: 80},
+            {t: "علم النفس الإكلينيكي", s: 70},
+            {t: "علم النفس الاجتماعي", s: 60},
+            {t: "علم النفس التنموي", s: 50},
+            {t: "علم النفس المعرفي", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للفولاذ في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "الهند", s: 90},
+            {t: "اليابان", s: 80},
+            {t: "الولايات المتحدة", s: 70},
+            {t: "روسيا", s: 60},
+            {t: "كوريا الجنوبية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم اجتماع؟",
+        o: [
+            {t: "علم الاجتماع الكلاسيكي", s: 100},
+            {t: "علم الاجتماع الحديث", s: 80},
+            {t: "علم الاجتماع التنموي", s: 70},
+            {t: "علم الاجتماع السياسي", s: 60},
+            {t: "علم الاجتماع الاقتصادي", s: 50},
+            {t: "علم الاجتماع الثقافي", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الغابات المعتدلة؟",
+        o: [
+            {t: "الدب البني", s: 100},
+            {t: "الذئب", s: 90},
+            {t: "الأيل", s: 80},
+            {t: "الخنزير البري", s: 70},
+            {t: "الوشق", s: 60},
+            {t: "الثعلب الأحمر", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم أحياء؟",
+        o: [
+            {t: "علم الحيوان", s: 100},
+            {t: "علم النبات", s: 90},
+            {t: "علم الأحياء الدقيقة", s: 80},
+            {t: "علم الوراثة", s: 70},
+            {t: "علم البيئة", s: 60},
+            {t: "علم الأحياء التطوري", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للسيارات في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "الولايات المتحدة", s: 90},
+            {t: "اليابان", s: 80},
+            {t: "ألمانيا", s: 70},
+            {t: "الهند", s: 60},
+            {t: "كوريا الجنوبية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم سياسة؟",
+        o: [
+            {t: "الفلسفة السياسية اليونانية", s: 100},
+            {t: "الفلسفة السياسية الرومانية", s: 90},
+            {t: "الفلسفة السياسية الإسلامية", s: 80},
+            {t: "الفلسفة السياسية الصينية", s: 70},
+            {t: "الفلسفة السياسية الهندية", s: 60},
+            {t: "الفلسفة السياسية الأوروبية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في المستنقعات؟",
+        o: [
+            {t: "التمساح", s: 100},
+            {t: "فرس النهر", s: 90},
+            {t: "الثعبان", s: 80},
+            {t: "السلحفاة", s: 70},
+            {t: "الطيور المائية", s: 60},
+            {t: "الأسماك الكبيرة", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم اقتصاد؟",
+        o: [
+            {t: "الاقتصاد السياسي", s: 100},
+            {t: "الاقتصاد الكلاسيكي", s: 90},
+            {t: "الاقتصاد الكينزي", s: 80},
+            {t: "الاقتصاد النيوكلاسيكي", s: 70},
+            {t: "الاقتصاد الإسلامي", s: 60},
+            {t: "الاقتصاد السلوكي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للطاقة الشمسية في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "الولايات المتحدة", s: 90},
+            {t: "اليابان", s: 80},
+            {t: "ألمانيا", s: 70},
+            {t: "الهند", s: 60},
+            {t: "إيطاليا", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم قانون؟",
+        o: [
+            {t: "القانون الروماني", s: 100},
+            {t: "القانون الإنجليزي", s: 90},
+            {t: "القانون الإسلامي", s: 80},
+            {t: "القانون الفرنسي", s: 70},
+            {t: "القانون الألماني", s: 60},
+            {t: "القانون الأمريكي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الكهوف؟",
+        o: [
+            {t: "الخفاش", s: 100},
+            {t: "السمندل", s: 80},
+            {t: "العناكب", s: 70},
+            {t: "الحشرات", s: 60},
+            {t: "الأسماك العمياء", s: 50},
+            {t: "القوارض", s: 40}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم لغويات؟",
+        o: [
+            {t: "علم اللغة السنسكريتي", s: 100},
+            {t: "علم اللغة اليوناني", s: 90},
+            {t: "علم اللغة العربي", s: 80},
+            {t: "علم اللغة الصيني", s: 70},
+            {t: "علم اللغة العبري", s: 60},
+            {t: "علم اللغة اللاتيني", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للطاقة الكهرومائية في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "البرازيل", s: 90},
+            {t: "كندا", s: 80},
+            {t: "الولايات المتحدة", s: 70},
+            {t: "روسيا", s: 60},
+            {t: "الهند", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم أنثروبولوجيا؟",
+        o: [
+            {t: "الأنثروبولوجيا الطبيعية", s: 100},
+            {t: "الأنثروبولوجيا الثقافية", s: 90},
+            {t: "الأنثروبولوجيا الاجتماعية", s: 80},
+            {t: "الأنثروبولوجيا اللغوية", s: 70},
+            {t: "الأنثروبولوجيا الأثرية", s: 60},
+            {t: "الأنثروبولوجيا البيولوجية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في السافانا؟",
+        o: [
+            {t: "الفيل الأفريقي", s: 100},
+            {t: "الزرافة", s: 90},
+            {t: "وحيد القرن", s: 80},
+            {t: "الأسد", s: 70},
+            {t: "الفهد", s: 60},
+            {t: "الحمار الوحشي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم آثار؟",
+        o: [
+            {t: "علم الآثار الكلاسيكي", s: 100},
+            {t: "علم الآثار الشرقي", s: 90},
+            {t: "علم الآثار المصري", s: 80},
+            {t: "علم الآثار ما قبل التاريخ", s: 70},
+            {t: "علم الآثار تحت الماء", s: 60},
+            {t: "علم الآثار التوراتي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للغاز الطبيعي في العالم؟",
+        o: [
+            {t: "الولايات المتحدة", s: 100},
+            {t: "روسيا", s: 90},
+            {t: "إيران", s: 80},
+            {t: "قطر", s: 70},
+            {t: "كندا", s: 60},
+            {t: "الصين", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم فلسفة؟",
+        o: [
+            {t: "الفلسفة اليونانية", s: 100},
+            {t: "الفلسفة الصينية", s: 90},
+            {t: "الفلسفة الهندية", s: 80},
+            {t: "الفلسفة الإسلامية", s: 70},
+            {t: "الفلسفة الأوروبية", s: 60},
+            {t: "الفلسفة الأفريقية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في الغابات المطيرة؟",
+        o: [
+            {t: "الفيل الآسيوي", s: 100},
+            {t: "النمر", s: 90},
+            {t: "الغوريلا", s: 80},
+            {t: "التابير", s: 70},
+            {t: "الكسلان", s: 60},
+            {t: "الطاووس", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم هندسة؟",
+        o: [
+            {t: "الهندسة المعمارية", s: 100},
+            {t: "الهندسة المدنية", s: 90},
+            {t: "الهندسة الميكانيكية", s: 80},
+            {t: "الهندسة الكهربائية", s: 70},
+            {t: "الهندسة الكيميائية", s: 60},
+            {t: "الهندسة الصناعية", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للطاقة النووية في العالم؟",
+        o: [
+            {t: "الولايات المتحدة", s: 100},
+            {t: "فرنسا", s: 90},
+            {t: "الصين", s: 80},
+            {t: "روسيا", s: 70},
+            {t: "كوريا الجنوبية", s: 60},
+            {t: "كندا", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم طب؟",
+        o: [
+            {t: "الطب المصري القديم", s: 100},
+            {t: "الطب اليوناني القديم", s: 90},
+            {t: "الطب الصيني التقليدي", s: 80},
+            {t: "الطب الهندي القديم", s: 70},
+            {t: "الطب الإسلامي", s: 60},
+            {t: "الطب الأوروبي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر حيوان يعيش في المحيطات العميقة؟",
+        o: [
+            {t: "الحوت الأحدب", s: 90},
+            {t: "الحبار العملاق", s: 100},
+            {t: "سمك أبو سيف", s: 80},
+            {t: "قرش الحوت", s: 70},
+            {t: "سمك الأنقليس", s: 60},
+            {t: "سرطان البحر", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أقدم علم فلك عملي؟",
+        o: [
+            {t: "علم الفلك البابلي", s: 100},
+            {t: "علم الفلك المصري", s: 90},
+            {t: "علم الفلك الصيني", s: 80},
+            {t: "علم الفلك اليوناني", s: 70},
+            {t: "علم الفلك العربي", s: 60},
+            {t: "علم الفلك الأوروبي", s: 50}
+        ]
+    },
+    {
+        c: "ثقافة عامة",
+        q: "ما هو أكبر منتج للطاقة المتجددة في العالم؟",
+        o: [
+            {t: "الصين", s: 100},
+            {t: "الولايات المتحدة", s: 90},
+            {t: "ألمانيا", s: 80},
+            {t: "الهند", s: 70},
+            {t: "اليابان", s: 60},
+            {t: "بريطانيا", s: 50}
+        ]
+    },
+
+
+    // دين (10 أسئلة)
+    {
+        c: "دين",
+        q: "ما هي أول سورة نزلت في القرآن الكريم؟",
+        o: [
+            {t: "سورة البقرة", s: 10},
+            {t: "سورة يوسف", s: 0},
+            {t: "سورة العلق", s: 100},
+            {t: "سورة الفاتحة", s: 30},
+            {t: "سورة الإخلاص", s: 5},
+            {t: "سورة المدثر", s: 80}
+        ]
+    },
+    {
+        c: "دين",
+        q: "كم عدد سور القرآن الكريم؟",
+        o: [
+            {t: "150 سورة", s: 5},
+            {t: "100 سورة", s: 40},
+            {t: "120 سورة", s: 60},
+            {t: "114 سورة", s: 100},
+            {t: "130 سورة", s: 20},
+            {t: "99 سورة", s: 10}
+        ]
+    },
+    {
+        c: "دين",
+        q: "ما هي أطول سورة في القرآن الكريم؟",
+        o: [
+            {t: "سورة الأنعام", s: 20},
+            {t: "سورة الأعراف", s: 10},
+            {t: "سورة البقرة", s: 100},
+            {t: "سورة آل عمران", s: 70},
+            {t: "سورة المائدة", s: 30},
+            {t: "سورة النساء", s: 50}
+        ]
+    },
+    {
+        c: "دين",
+        q: "كم عدد أركان الإسلام؟",
+        o: [
+            {t: "8 أركان", s: 5},
+            {t: "7 أركان", s: 20},
+            {t: "4 أركان", s: 40},
+            {t: "6 أركان", s: 60},
+            {t: "5 أركان", s: 100},
+            {t: "3 أركان", s: 10}
+        ]
+    },
+    {
+        c: "دين",
+        q: "ما هي آخر سورة نزلت في القرآن الكريم؟",
+        o: [
+            {t: "سورة البقرة", s: 60},
+            {t: "سورة الفلق", s: 10},
+            {t: "سورة الفاتحة", s: 40},
+            {t: "سورة الناس", s: 5},
+            {t: "سورة النصر", s: 100},
+            {t: "سورة الإخلاص", s: 20}
+        ]
+    },
+    {
+        c: "دين",
+        q: "ما هو عدد الصلوات المفروضة في اليوم؟",
+        o: [
+            {t: "2 صلاتين", s: 5},
+            {t: "7 صلوات", s: 10},
+            {t: "3 صلوات", s: 60},
+            {t: "6 صلوات", s: 20},
+            {t: "5 صلوات", s: 100},
+            {t: "4 صلوات", s: 40}
+        ]
+    },
+    {
+        c: "دين",
+        q: "ما هو أول ما نزل من التوراة؟",
+        o: [
+            {t: "سبحان الله", s: 10},
+            {t: "الحمد لله رب العالمين", s: 60},
+            {t: "قل هو الله أحد", s: 40},
+            {t: "الله أكبر", s: 5},
+            {t: "بسم الله الرحمن الرحيم", s: 100},
+            {t: "لا إله إلا الله", s: 20}
+        ]
+    },
+    {
+        c: "دين",
+        q: "ما هي السورة التي تسمى قلب القرآن؟",
+        o: [
+            {t: "سورة الكهف", s: 20},
+            {t: "سورة البقرة", s: 50},
+            {t: "سورة الملك", s: 10},
+            {t: "سورة يس", s: 100},
+            {t: "سورة الإخلاص", s: 30},
+            {t: "سورة الفاتحة", s: 70}
+        ]
+    },
+    {
+        c: "دين",
+        q: "كم عدد أحرف القرآن الكريم؟",
+        o: [
+            {t: "400,000 حرف", s: 30},
+            {t: "300,000 حرف", s: 70},
+            {t: "250,000 حرف", s: 20},
+            {t: "350,000 حرف", s: 50},
+            {t: "450,000 حرف", s: 10},
+            {t: "323,671 حرف", s: 100}
+        ]
+    },
+    {
+        c: "دين",
+        q: "ما هي السورة التي تسمى عروس القرآن؟",
+        o: [
+            {t: "سورة الرحمن", s: 100},
+            {t: "سورة النور", s: 5},
+            {t: "سورة البقرة", s: 60},
+            {t: "سورة الكهف", s: 10},
+            {t: "سورة الفاتحة", s: 20},
+            {t: "سورة يس", s: 40}
+        ]
+    },
+
+    // فنون (10 أسئلة)
+    {
+        c: "فنون",
+        q: "من رسم لوحة الموناليزا؟",
+        o: [
+            {t: "ليوناردو دا فينشي", s: 100},
+            {t: "بيكاسو", s: 10},
+            {t: "كلود مونيه", s: 5},
+            {t: "ميشيل أنجلو", s: 60},
+            {t: "رامبرانت", s: 40},
+            {t: "فان جوخ", s: 20}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "من هو مؤلف مسرحية 'هاملت'؟",
+        o: [
+            {t: "إبسن", s: 5},
+            {t: "سوفوكليس", s: 40},
+            {t: "تشيخوف", s: 10},
+            {t: "موليير", s: 20},
+            {t: "أرسطو", s: 60},
+            {t: "وليم شكسبير", s: 100}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "ما هي الجائزة السينمائية الأرفع في الولايات المتحدة؟",
+        o: [
+            {t: "جائزة إيمي", s: 30},
+            {t: "جائزة البافتا", s: 50},
+            {t: "جائزة الغولدن غلوب", s: 70},
+            {t: "جائزة الأوسكار", s: 100},
+            {t: "جائزة غرامي", s: 20},
+            {t: "جائزة توني", s: 10}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "من هو الفنان الذي رسم 'ليلة مرصعة بالنجوم'؟",
+        o: [
+            {t: "بيكاسو", s: 60},
+            {t: "دالي", s: 40},
+            {t: "مونيه", s: 20},
+            {t: "رينوار", s: 10},
+            {t: "فان جوخ", s: 100},
+            {t: "ليوناردو دا فينشي", s: 5}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "ما هي أقدم لغة مكتوبة في العالم؟",
+        o: [
+            {t: "اللاتينية", s: 30},
+            {t: "السومرية", s: 100},
+            {t: "الهيروغليفية", s: 80},
+            {t: "الصينية", s: 60},
+            {t: "اليونانية", s: 40},
+            {t: "العربية", s: 20}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "من هو مؤلف كتاب 'البؤساء'؟",
+        o: [
+            {t: "أونوريه دي بلزاك", s: 40},
+            {t: "فيكتور هوغو", s: 100},
+            {t: "ألكسندر دوما", s: 60},
+            {t: "جان جاك روسو", s: 20},
+            {t: "جي دي موباسان", s: 30},
+            {t: "إميل زولا", s: 10}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "ما هي الآلة الموسيقية التي تعرف باسم 'ملكة الآلات'؟",
+        o: [
+            {t: "الكمان", s: 60},
+            {t: "البيانو", s: 100},
+            {t: "العود", s: 40},
+            {t: "الناي", s: 20},
+            {t: "القيثارة", s: 30},
+            {t: "الطبلة", s: 10}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "من هو مؤلف سمفونية القدر (الخامسة)؟",
+        o: [
+            {t: "موزارت", s: 60},
+            {t: "بيتهوفن", s: 100},
+            {t: "باخ", s: 40},
+            {t: "شوبان", s: 30},
+            {t: "ليست", s: 20},
+            {t: "تشايكوفسكي", s: 10}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "ما هو الفن الذي يسمى 'الفن السابع'؟",
+        o: [
+            {t: "المسرح", s: 60},
+            {t: "النحت", s: 30},
+            {t: "السينما", s: 100},
+            {t: "الرسم", s: 40},
+            {t: "الموسيقى", s: 20},
+            {t: "الشعر", s: 10}
+        ]
+    },
+    {
+        c: "فنون",
+        q: "من هو الشاعر العربي الذي لقب بـ'أمير الشعراء'؟",
+        o: [
+            {t: "نزار قباني", s: 30},
+            {t: "محمود درويش", s: 40},
+            {t: "أحمد شوقي", s: 100},
+            {t: "أبو القاسم الشابي", s: 50},
+            {t: "عمر أبو ريشة", s: 20},
+            {t: "بدر شاكر السياب", s: 10}
+        ]
+    },
+
+    // تكنولوجيا (10 أسئلة)
+    {
+        c: "تكنولوجيا",
+        q: "ما هو نظام التشغيل الأكثر استخدامًا في الهواتف الذكية؟",
+        o: [
+            {t: "لينكس", s: 5},
+            {t: "بلاك بيري", s: 10},
+            {t: "أندرويد", s: 100},
+            {t: "ويندوز فون", s: 20},
+            {t: "ماك أو إس", s: 0},
+            {t: "iOS", s: 90}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هي شركة التكنولوجيا التي أسسها بيل جيتس؟",
+        o: [
+            {t: "أبل", s: 40},
+            {t: "مايكروسوفت", s: 100},
+            {t: "غوغل", s: 60},
+            {t: "آي بي إم", s: 30},
+            {t: "أمازون", s: 20},
+            {t: "إنتل", s: 10}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هو المقصود بـ'الذكاء الاصطناعي'؟",
+        o: [
+            {t: "برامج الرسم", s: 20},
+            {t: "أنظمة محاكاة العقل البشري", s: 100},
+            {t: "الهواتف الذكية", s: 60},
+            {t: "ألعاب الكمبيوتر", s: 30},
+            {t: "شبكات التواصل", s: 10},
+            {t: "قواعد البيانات", s: 5}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هو الجهاز الذي يربط شبكات الكمبيوتر ببعضها؟",
+        o: [
+            {t: "المودم", s: 60},
+            {t: "الراوتر", s: 100},
+            {t: "السويتش", s: 80},
+            {t: "الهب", s: 40},
+            {t: "البروكسي", s: 20},
+            {t: "الفايروول", s: 10}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هي لغة البرمجة الأكثر استخدامًا في تطوير الويب؟",
+        o: [
+            {t: "بايثون", s: 80},
+            {t: "جافا سكريبت", s: 100},
+            {t: "جافا", s: 60},
+            {t: "سي ++", s: 40},
+            {t: "بي إتش بي", s: 70},
+            {t: "روبي", s: 20}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هو المقصود بـ'التخزين السحابي'؟",
+        o: [
+            {t: "التخزين على الهواتف", s: 30},
+            {t: "التخزين على الأقراص الصلبة", s: 40},
+            {t: "التخزين على الخوادم البعيدة", s: 100},
+            {t: "التخزين على الأقراص المرنة", s: 10},
+            {t: "التخزين على الذاكرة المؤقتة", s: 20},
+            {t: "التخزين على الأقراص المدمجة", s: 5}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هي العملة الرقمية المشفرة الأشهر؟",
+        o: [
+            {t: "الإيثيريوم", s: 80},
+            {t: "البيتكوين", s: 100},
+            {t: "الريبل", s: 60},
+            {t: "اللايتكوين", s: 40},
+            {t: "الدوجكوين", s: 20},
+            {t: "الكاردانو", s: 30}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هي شركة الهواتف الذكية التي تنتج هواتف 'جالاكسي'؟",
+        o: [
+            {t: "أبل", s: 40},
+            {t: "هواوي", s: 60},
+            {t: "سامسونج", s: 100},
+            {t: "شاومي", s: 30},
+            {t: "نوكيا", s: 20},
+            {t: "إل جي", s: 10}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هو المتصفح الذي طورته شركة غوغل؟",
+        o: [
+            {t: "فايرفوكس", s: 60},
+            {t: "كروم", s: 100},
+            {t: "سفاري", s: 40},
+            {t: "إيدج", s: 30},
+            {t: "أوبرا", s: 20},
+            {t: "إنترنت إكسبلورر", s: 10}
+        ]
+    },
+    {
+        c: "تكنولوجيا",
+        q: "ما هي منصة التواصل الاجتماعي التي تمتلكها شركة ميتا؟",
+        o: [
+            {t: "تويتر", s: 40},
+            {t: "انستغرام", s: 80},
+            {t: "فيسبوك", s: 100},
+            {t: "تيك توك", s: 60},
+            {t: "سناب شات", s: 30},
+            {t: "لينكد إن", s: 20}
+        ]
+    },
+
+    // أدب (10 أسئلة)
+    {
+        c: "أدب",
+        q: "من هو مؤلف رواية 'ألف ليلة وليلة'؟",
+        o: [
+            {t: "نجيب محفوظ", s: 30},
+            {t: "جبران خليل جبران", s: 5},
+            {t: "مصطفى لطفي المنفلوطي", s: 0},
+            {t: "مؤلف مجهول", s: 100},
+            {t: "طه حسين", s: 20},
+            {t: "أحمد شوقي", s: 10}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "من هو مؤلف رواية 'البؤساء'؟",
+        o: [
+            {t: "فيكتور هوغو", s: 100},
+            {t: "ألكسندر دوما", s: 60},
+            {t: "أونوريه دي بلزاك", s: 40},
+            {t: "جي دي موباسان", s: 30},
+            {t: "إميل زولا", s: 20},
+            {t: "جان جاك روسو", s: 10}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "ما هي الرواية التي كتبها دانتي أليغييري؟",
+        o: [
+            {t: "الإلياذة", s: 40},
+            {t: "الكوميديا الإلهية", s: 100},
+            {t: "الجحيم", s: 80},
+            {t: "الفردوس المفقود", s: 60},
+            {t: "الآلهة الصغيرة", s: 30},
+            {t: "أوديسة", s: 20}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "من هو الشاعر الذي لقب بـ'شاعر النيل'؟",
+        o: [
+            {t: "أحمد شوقي", s: 60},
+            {t: "حافظ إبراهيم", s: 100},
+            {t: "عمر أبو ريشة", s: 30},
+            {t: "أبو القاسم الشابي", s: 40},
+            {t: "محمود درويش", s: 20},
+            {t: "نزار قباني", s: 10}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "ما هي القصيدة التي تسمى 'بردة المديح'؟",
+        o: [
+            {t: "قصيدة البردة للبوصيري", s: 100},
+            {t: "قصيدة نهج البردة", s: 60},
+            {t: "قصيدة البردة للشريف الرضي", s: 40},
+            {t: "قصيدة البردة لأحمد شوقي", s: 30},
+            {t: "قصيدة البردة للبحتري", s: 20},
+            {t: "قصيدة البردة للمتنبي", s: 10}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "من هو مؤلف كتاب 'كليلة ودمنة'؟",
+        o: [
+            {t: "ابن المقفع", s: 100},
+            {t: "الجاحظ", s: 60},
+            {t: "ابن خلدون", s: 40},
+            {t: "الهمذاني", s: 30},
+            {t: "ابن سينا", s: 20},
+            {t: "الفارابي", s: 10}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "ما هي الرواية العربية التي فازت بجائزة نوبل؟",
+        o: [
+            {t: "زقاق المدق", s: 80},
+            {t: "الأيام", s: 60},
+            {t: "الثلاثية (قصر الشوق، السكرية، بين القصرين)", s: 100},
+            {t: "عائد إلى حيفا", s: 40},
+            {t: "ذاكرة الجسد", s: 30},
+            {t: "اللص والكلاب", s: 20}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "من هو مؤلف مسرحية 'الملك لير'؟",
+        o: [
+            {t: "أرسطو", s: 30},
+            {t: "تشيخوف", s: 20},
+            {t: "موليير", s: 40},
+            {t: "سوفوكليس", s: 10},
+            {t: "وليم شكسبير", s: 100},
+            {t: "إبسن", s: 5}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "ما هو الكتاب الذي يسمى 'إنجيل العرب'؟",
+        o: [
+            {t: "ديوان المتنبي", s: 40},
+            {t: "الأغاني لأبي الفرج الأصفهاني", s: 100},
+            {t: "العقد الفريد", s: 60},
+            {t: "البيان والتبيين", s: 30},
+            {t: "الكامل للمبرد", s: 20},
+            {t: "ألف ليلة وليلة", s: 10}
+        ]
+    },
+    {
+        c: "أدب",
+        q: "من هو الشاعر الجاهلي صاحب المعلقة التي تبدأ بـ'قفا نبك من ذكرى حبيب ومنزل'؟",
+        o: [
+            {t: "عنترة بن شداد", s: 60},
+            {t: "امرؤ القيس", s: 100},
+            {t: "زهير بن أبي سلمى", s: 40},
+            {t: "طرفة بن العبد", s: 30},
+            {t: "عمرو بن كلثوم", s: 20},
+            {t: "الحارث بن حلزة", s: 10}
+        ]
+    },
+
+    // سيارات (10 أسئلة)
+    {
+        c: "سيارات",
+        q: "ما هي شركة السيارات التي تنتج طراز 'تسلا'؟",
+        o: [
+            {t: "فورد", s: 15},
+            {t: "بي إم دبليو", s: 10},
+            {t: "تسلا", s: 100},
+            {t: "تويوتا", s: 20},
+            {t: "مرسيدس", s: 5},
+            {t: "شيفروليه", s: 0}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي شركة السيارات الألمانية التي تنتج سيارات 'الفسفور'؟",
+        o: [
+            {t: "مرسيدس", s: 70},
+            {t: "بي إم دبليو", s: 100},
+            {t: "أودي", s: 80},
+            {t: "فولكس فاجن", s: 60},
+            {t: "بورش", s: 40},
+            {t: "أوبل", s: 20}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي السيارة التي تسمى 'الخنفساء'؟",
+        o: [
+            {t: "فيات 500", s: 60},
+            {t: "فولكس فاجن بيتل", s: 100},
+            {t: "ميني كوبر", s: 70},
+            {t: "سيتروين 2CV", s: 40},
+            {t: "رينو 4", s: 30},
+            {t: "فورد موستانج", s: 20}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي الدولة التي تنتج سيارات 'كيَا'؟",
+        o: [
+            {t: "اليابان", s: 60},
+            {t: "كوريا الجنوبية", s: 100},
+            {t: "الصين", s: 40},
+            {t: "الولايات المتحدة", s: 30},
+            {t: "ألمانيا", s: 20},
+            {t: "فرنسا", s: 10}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي السيارة الرياضية الإيطالية الشهيرة بلونها الأحمر؟",
+        o: [
+            {t: "لامبورغيني", s: 80},
+            {t: "فيراري", s: 100},
+            {t: "مازيراتي", s: 60},
+            {t: "ألفا روميو", s: 40},
+            {t: "بوجاتي", s: 30},
+            {t: "فياري", s: 20}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هو الوقود البديل الذي تستخدمه بعض السيارات الحديثة؟",
+        o: [
+            {t: "الكهرباء", s: 100},
+            {t: "الغاز الطبيعي", s: 80},
+            {t: "الهيدروجين", s: 60},
+            {t: "الديزل الحيوي", s: 40},
+            {t: "الإيثانول", s: 30},
+            {t: "البروبان", s: 20}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي شركة السيارات التي تنتج طراز 'كامري'؟",
+        o: [
+            {t: "هوندا", s: 60},
+            {t: "تويوتا", s: 100},
+            {t: "نيسان", s: 70},
+            {t: "مازدا", s: 40},
+            {t: "سوبارو", s: 30},
+            {t: "ميتسوبيشي", s: 20}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هو نظام الدفع الرباعي المعروف في السيارات؟",
+        o: [
+            {t: "4WD", s: 100},
+            {t: "AWD", s: 80},
+            {t: "FWD", s: 60},
+            {t: "RWD", s: 40},
+            {t: "4x4", s: 90},
+            {t: "4Motion", s: 70}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي السيارة التي تسمى 'السلحفاة' في العالم العربي؟",
+        o: [
+            {t: "مرسيدس W123", s: 100},
+            {t: "بي إم دبليو E30", s: 70},
+            {t: "فولفو 240", s: 60},
+            {t: "بيجو 504", s: 50},
+            {t: "شيفروليه كابريس", s: 40},
+            {t: "تويوتا كراون", s: 30}
+        ]
+    },
+    {
+        c: "سيارات",
+        q: "ما هي شركة السيارات الأمريكية التي تنتج 'المستكشف'؟",
+        o: [
+            {t: "جيب", s: 70},
+            {t: "فورد", s: 100},
+            {t: "شيفروليه", s: 80},
+            {t: "دودج", s: 60},
+            {t: "كاديلاك", s: 40},
+            {t: "لينكولن", s: 30}
+        ]
+    }
+];
+        // --- Authentication & User Data ---
+        window.handleLogin = async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, e, p);
+                document.getElementById('authModal').style.display = 'none';
+            } catch(err) { alert("خطأ في الدخول: " + err.message); }
+        };
+
+        window.logout = () => {
+            signOut(auth).then(() => location.reload());
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authModal').style.display = 'none';
+                
+                onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        document.getElementById('myGems').textContent = data.gems.toLocaleString();
+                        document.getElementById('myName').textContent = data.name;
+                        let avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=random`;
+                        document.getElementById('myAvatar').src = avatarUrl;
+                        document.getElementById('myAvatar').style.display = 'block';
+                        
+                        if (data.status === 'in-game' && data.currentRoomId && !currentRoomId) {
+                            enterGame(data.currentRoomId, false);                        }
+                    }
+                });
+
+                await updateDoc(doc(db, "users", user.uid), { 
+                    status: 'online', 
+                    currentRoomId: null 
+                });
+
+                loadMembers();
+                listenForIncomingChallenges();
+            } else {
+                document.getElementById('authModal').style.display = 'flex';
+            }
+        });
+
+        // --- قائمة الأعضاء ---
+        function loadMembers() {
+            const q = query(collection(db, "users")); 
+            onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('membersList');
+                list.innerHTML = "";
+                
+                snapshot.forEach(docSnap => {
+                    const uData = docSnap.data();
+                    const uId = docSnap.id;
+                    if (currentUser && uId === currentUser.uid) return;
+
+                    const isBusy = uData.status === 'in-game';
+                    
+                    let avatar = uData.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(uData.name)}&background=random`;
+                    
+                    let actionBtn = "";
+                    if (isBusy) {
+                        actionBtn = `<button class="action-btn btn-watch" onclick="watchGame('${uData.currentRoomId}')"><i class="fas fa-eye"></i> مشاهدة</button>`;
+                    } else {
+                        actionBtn = `<button class="action-btn btn-challenge" onclick="openChallengeSetup('${uId}', '${uData.name.replace(/'/g, "\\'")}', '${avatar.replace(/'/g, "\\'")}')"><i class="fas fa-bolt"></i> تحدي</button>`;
+                    }
+
+                    const item = document.createElement('div');
+                    item.className = "member-card animate__animated animate__fadeIn";
+                    item.dataset.name = uData.name;
+                    item.innerHTML = `
+                        <div class="m-info">
+                            <div class="m-avatar">
+                                <img src="${avatar}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(uData.name)}&background=random'" style="width:100%; height:100%; border-radius:50%">
+                                <div class="m-status ${isBusy ? 'status-busy' : 'status-online'}"></div>
+                            </div>
+                            <div class="m-details">
+                                <h4>${uData.name}</h4>
+                                <span>${isBusy ? 'في مباراة' : 'متصل'}</span>                            </div>
+                        </div>
+                        ${actionBtn}
+                    `;
+                    list.appendChild(item);
+                });
+            });
+        }
+
+        window.filterMembers = () => {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.member-card');
+            items.forEach(item => {
+                const name = item.dataset.name.toLowerCase();
+                item.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        };
+
+        // --- نظام التحديات ---
+        window.openChallengeSetup = (uid, name, photo) => {
+            selectedTargetUser = { uid, name, photo };
+            document.getElementById('targetName').textContent = name;
+            document.getElementById('targetImg').src = photo;
+            document.getElementById('sendChalModal').style.display = 'flex';
+        };
+
+        window.confirmSendChallenge = async () => {
+            const amount = parseInt(document.getElementById('chalAmount').value);
+            const myData = (await getDoc(doc(db, "users", currentUser.uid))).data();
+
+            await addDoc(collection(db, "challenges"), {
+                fromId: currentUser.uid,
+                fromName: myData.name,
+                fromPhoto: currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(myData.name)}`,
+                toId: selectedTargetUser.uid,
+                amount: 0,
+                status: 'pending',
+                timestamp: serverTimestamp()
+            });
+
+            alert("تم إرسال التحدي! بانتظار القبول...");
+            closeModal('sendChalModal');
+        };
+
+        function listenForIncomingChallenges() {            const q = query(collection(db, "challenges"), 
+                where("toId", "==", currentUser.uid), 
+                where("status", "==", "pending")
+            );
+
+            onSnapshot(q, (snapshot) => {
+                const count = snapshot.docs.length;
+                const badge = document.getElementById('chalCount');
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'block' : 'none';
+
+                const list = document.getElementById('challengesList');
+                list.innerHTML = count === 0 ? '<p style="text-align:center; color:#64748b">لا توجد تحديات</p>' : '';
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const el = document.createElement('div');
+                    el.className = 'challenge-item';
+                    el.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:10px">
+                            <img src="${data.fromPhoto}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(data.fromName)}&background=random'" style="width:30px; height:30px; border-radius:50%">
+                            <div>
+                                <div style="font-weight:bold; font-size:0.9rem">${data.fromName}</div>
+                                <div style="color:var(--gold); font-size:0.8rem">${data.amount.toLocaleString()} <i class="fas fa-gem"></i></div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn-sm btn-accept" onclick="acceptChallenge('${docSnap.id}', ${data.amount}, '${data.fromId}')">قبول</button>
+                            <button class="btn-sm btn-reject" onclick="rejectChallenge('${docSnap.id}')">رفض</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            });
+        }
+
+        window.acceptChallenge = async (chalId, amount, opponentId) => {
+            const myRef = doc(db, "users", currentUser.uid);
+            const opRef = doc(db, "users", opponentId);
+            
+            const mySnap = await getDoc(myRef);
+            const opSnap = await getDoc(opRef);
+
+            if (mySnap.data().gems < amount) return alert("لا تملك رصيد كافٍ للقبول!");
+            if (opSnap.data().gems < amount) {
+                await updateDoc(doc(db, "challenges", chalId), { status: 'failed' });
+                return alert("الخصم لم يعد يملك الرصيد الكافي!");
+            }
+
+            // خصم الجواهر من الطرفين            await updateDoc(myRef, { gems: increment(-amount), status: 'in-game' });
+            await updateDoc(opRef, { gems: increment(-amount), status: 'in-game' });
+
+            // إنشاء غرفة اللعب
+            const roomRef = await addDoc(collection(db, "rooms"), {
+                players: [
+                    { 
+                        uid: opponentId, 
+                        name: opSnap.data().name, 
+                        photo: opSnap.data().photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(opSnap.data().name)}`,
+                        score: 0, 
+                        answers: Array(10).fill(null),
+                        answered: false
+                    },
+                    { 
+                        uid: currentUser.uid, 
+                        name: mySnap.data().name, 
+                        photo: mySnap.data().photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(mySnap.data().name)}`,
+                        score: 0, 
+                        answers: Array(10).fill(null),
+                        answered: false
+                    }
+                ],
+                fee: amount,
+                status: 'active',
+                startedAt: Date.now(),
+                currentQuestion: 0,
+                timeLeft: 10,
+                questionStartTime: Date.now(),
+                allPlayersAnswered: false,
+                gameResults: Array(10).fill({ 
+                    p1Answer: null,
+                    p2Answer: null,
+                    p1Points: 0,
+                    p2Points: 0
+                })
+            });
+
+            await updateDoc(doc(db, "challenges", chalId), { 
+                status: 'accepted', 
+                roomId: roomRef.id 
+            });
+
+            await updateDoc(myRef, { currentRoomId: roomRef.id });
+            await updateDoc(opRef, { currentRoomId: roomRef.id });
+
+            closeModal('incomingChalModal');
+            enterGame(roomRef.id, false);
+        };
+        window.rejectChallenge = async (chalId) => {
+            await updateDoc(doc(db, "challenges", chalId), { status: 'rejected' });
+        };
+
+        // --- منطق اللعبة ---
+        window.watchGame = (roomId) => {
+            if (!roomId || roomId === "undefined" || roomId === "null") {
+                return alert("المباراة انتهت أو غير متاحة");
+            }
+            enterGame(roomId, true);
+        };
+
+        function enterGame(rId, spectatorMode) {
+            currentRoomId = rId;
+            isSpectator = spectatorMode;
+            document.getElementById('membersView').style.display = 'none';
+            document.getElementById('gameArena').style.display = 'block';
+            
+            if (isSpectator) {
+                document.getElementById('specBadge').style.display = 'block';
+                document.getElementById('optionsGrid').style.pointerEvents = 'none';
+            } else {
+                document.getElementById('specBadge').style.display = 'none';
+                document.getElementById('optionsGrid').style.pointerEvents = 'auto';
+            }
+
+            const roomRef = doc(db, "rooms", rId);
+            onSnapshot(roomRef, async (snap) => {
+                if (!snap.exists()) {
+                    alert("المباراة انتهت");
+                    window.exitGame();
+                    return;
+                }
+                
+                const data = snap.data();
+                await syncGameUI(data);
+                
+                if (data.status === 'finished') {
+                    showGameResult(data);
+                }
+            });
+        }
+
+        async function syncGameUI(data) {
+            const p1 = data.players[0];
+            const p2 = data.players[1];
+            const myPlayer = data.players.find(p => p.uid === currentUser.uid);
+            
+            
+            // تحديث واجهة اللاعبين مع صور آمنة
+            document.getElementById('p1Name').textContent = p1.name; 
+// في دالة syncGameUI (أضف هذا بعد السطر الذي يعرض اسم اللاعب 1)
+document.getElementById('p1Img').src = p1.photo || currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(p1.name)}&background=random`;            
+            document.getElementById('p1Score').textContent = p1.score;
+            document.getElementById('p1Img').src = p1.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(p1.name)}&background=random`;
+            
+            document.getElementById('p2Name').textContent = p2.name;
+            // في دالة syncGameUI (أضف هذا بعد السطر الذي يعرض اسم اللاعب 1)
+document.getElementById('p1Img').src = p1.photo || currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(p1.name)}&background=random`;
+            document.getElementById('p2Score').textContent = p2.score;
+            document.getElementById('p2Img').src = p2.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(p2.name)}&background=random`;
+            
+            // حالة الإجابة
+            document.getElementById('p1StatusName').textContent = p1.name;
+            document.getElementById('p2StatusName').textContent = p2.name;
+            
+            const p1Answered = data.players[0].answers[data.currentQuestion] !== null;
+            const p2Answered = data.players[1].answers[data.currentQuestion] !== null;
+            
+            document.getElementById('p1StatusIndicator').className = `answer-indicator ${p1Answered ? 'answered' : 'not-answered'}`;
+            document.getElementById('p2StatusIndicator').className = `answer-indicator ${p2Answered ? 'answered' : 'not-answered'}`;
+            
+            // السؤال الحالي
+            const qData = questions[data.currentQuestion];
+            document.getElementById('qCategory').textContent = qData.c;
+            document.getElementById('qCount').textContent = `السؤال ${data.currentQuestion + 1} / 10`;
+            document.getElementById('qText').textContent = qData.q;
+            
+            // المؤقت
+            timeLeft = data.timeLeft;
+            document.getElementById('timerText').textContent = `${timeLeft} ثانية`;
+            document.getElementById('timerBar').style.width = `${(timeLeft / 10) * 100}%`;
+            
+            const now = Date.now();
+            const elapsed = Math.floor((now - data.questionStartTime) / 1000);
+            
+            if (elapsed >= 10 && data.status === 'active') {
+                await moveToNextQuestion(data);
+                return;
+            }
+            
+            if (data.status === 'active' && !gameTimer) {
+                startGameTimer(data);
+            }
+            
+            renderOptions(qData.o, data, myPlayer);
+        }
+
+        function startGameTimer(roomData) {
+            if (gameTimer) clearInterval(gameTimer);
+            
+            gameTimer = setInterval(async () => {
+                const roomSnap = await getDoc(doc(db, "rooms", currentRoomId));
+                if (!roomSnap.exists()) {
+                    clearInterval(gameTimer);                    return;
+                }
+                
+                const data = roomSnap.data();
+                const now = Date.now();
+                const elapsed = Math.floor((now - data.questionStartTime) / 1000);
+                const remaining = Math.max(0, 10 - elapsed);
+                
+                if (remaining <= 0) {
+                    clearInterval(gameTimer);
+                    gameTimer = null;
+                    await moveToNextQuestion(data);
+                } else {
+                    document.getElementById('timerText').textContent = `${remaining} ثانية`;
+                    document.getElementById('timerBar').style.width = `${(remaining / 10) * 100}%`;
+                    
+                    await updateDoc(doc(db, "rooms", currentRoomId), {
+                        timeLeft: remaining
+                    });
+                }
+            }, 1000);
+        }
+
+        async function moveToNextQuestion(roomData) {
+            const nextQuestion = roomData.currentQuestion + 1;
+            
+            if (nextQuestion >= 10) {
+                await finishGame(roomData);
+                return;
+            }
+            
+            await updateDoc(doc(db, "rooms", currentRoomId), {
+                currentQuestion: nextQuestion,
+                timeLeft: 10,
+                questionStartTime: Date.now(),
+                allPlayersAnswered: false
+            });
+            
+            mySelectedAnswer = null;
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+            
+            if (!isSpectator) {
+                const roomSnap = await getDoc(doc(db, "rooms", currentRoomId));
+                if (roomSnap.exists()) {
+                    startGameTimer(roomSnap.data());
+                }            }
+        }
+
+        function renderOptions(options, roomData, myPlayer) {
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = "";
+            
+            const myAnswer = myPlayer ? myPlayer.answers[roomData.currentQuestion] : null;
+            
+            options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "opt-btn";
+                btn.textContent = opt.t;
+                
+                if (isSpectator) {
+                    btn.disabled = true;
+                    const p1Ans = roomData.players[0].answers[roomData.currentQuestion];
+                    const p2Ans = roomData.players[1].answers[roomData.currentQuestion];
+                    if (index === p1Ans || index === p2Ans) {
+                        btn.classList.add('selected');
+                    }
+                } else if (myPlayer && myAnswer === null) {
+                    btn.disabled = false;
+                    btn.onclick = () => submitAnswer(index, roomData, myPlayer);
+                } else if (myPlayer && myAnswer !== null) {
+                    btn.disabled = true;
+                    if (index === myAnswer) {
+                        btn.classList.add('selected');
+                    }
+                }
+                
+                grid.appendChild(btn);
+            });
+        }
+
+        async function submitAnswer(answerIndex, roomData, myPlayer) {
+            const players = [...roomData.players];
+            const myIdx = players.findIndex(p => p.uid === currentUser.uid);
+            
+            // احتساب النقاط من السؤال مباشرة
+            const points = questions[roomData.currentQuestion].o[answerIndex].s;
+            players[myIdx].score += points;
+            players[myIdx].answers[roomData.currentQuestion] = answerIndex;
+            
+            const gameResults = [...roomData.gameResults];
+            if (myIdx === 0) {
+                gameResults[roomData.currentQuestion].p1Answer = answerIndex;
+                gameResults[roomData.currentQuestion].p1Points = points;
+            } else {
+                gameResults[roomData.currentQuestion].p2Answer = answerIndex;                gameResults[roomData.currentQuestion].p2Points = points;
+            }
+            
+            await updateDoc(doc(db, "rooms", currentRoomId), {
+                players: players,
+                gameResults: gameResults
+            });
+            
+            mySelectedAnswer = answerIndex;
+            
+            const allAnswered = players.every(p => p.answers[roomData.currentQuestion] !== null);
+            if (allAnswered) {
+                setTimeout(async () => {
+                    await moveToNextQuestion(roomData);
+                }, 3000);
+            }
+        }
+
+        async function finishGame(data) {
+            await updateDoc(doc(db, "rooms", currentRoomId), {
+                status: 'finished',
+                finishedAt: Date.now()
+            });
+            
+            const p1 = data.players[0];
+            const p2 = data.players[1];
+            const isDraw = p1.score === p2.score;
+            const totalPool = data.fee * 2; // مجموع ما دفعه اللاعبان
+            const commission = Math.round(totalPool * 0.10);
+            const prize = totalPool - commission; // 90%
+
+            if (!isDraw) {
+                const winner = p1.score > p2.score ? p1 : p2;
+                const loser = p1.score > p2.score ? p2 : p1;
+                
+                await sendCommission(commission);
+                
+                await updateDoc(doc(db, "users", winner.uid), { 
+                    gems: increment(prize),
+                    wins: increment(1)
+                });
+                
+                await updateDoc(doc(db, "users", loser.uid), { 
+                    losses: increment(1)
+                });
+            } else {
+                // تعادل: إعادة المبلغ الأصلي لكل لاعب
+                await updateDoc(doc(db, "users", p1.uid), { gems: increment(data.fee) });
+                await updateDoc(doc(db, "users", p2.uid), { gems: increment(data.fee) });
+            }            
+            await updateDoc(doc(db, "users", p1.uid), { status: 'online', currentRoomId: null });
+            await updateDoc(doc(db, "users", p2.uid), { status: 'online', currentRoomId: null });
+            
+            setTimeout(async () => {
+                try { await deleteDoc(doc(db, "rooms", currentRoomId)); } catch (e) {}
+            }, 30000);
+        }
+
+        async function sendCommission(amount) {
+            const q = query(collection(db, "users"), where("email", "==", ADMIN_EMAIL));
+            const snap = await getDocs(q);
+            if (!snap.empty) {
+                await updateDoc(snap.docs[0].ref, { gems: increment(amount) });
+            }
+        }
+
+        function showGameResult(data) {
+            const p1 = data.players[0];
+            const p2 = data.players[1];
+            const isWinner = currentUser ? 
+                (p1.uid === currentUser.uid ? p1.score > p2.score : p2.score > p1.score) : false;
+            const isDraw = p1.score === p2.score;
+            
+            let html = '';
+            if (isDraw) {
+                html = `
+                    <div style="text-align:center; padding:20px">
+                        <i class="fas fa-handshake fa-4x" style="color:var(--blue); margin-bottom:15px"></i>
+                        <h2>تعادل!</h2>
+                        <p>${p1.name}: ${p1.score} نقطة</p>
+                        <p>${p2.name}: ${p2.score} نقطة</p>
+                        <p>تم إعادة الجواهر للطرفين</p>
+                `;
+            } else {
+                const winner = p1.score > p2.score ? p1 : p2;
+                const totalPool = data.fee * 2;
+                const prize = Math.round(totalPool * 0.9);
+                html = `
+                    <div style="text-align:center; padding:20px">
+                        <i class="fas fa-trophy fa-4x" style="color:var(--gold); margin-bottom:15px"></i>
+                        <h2>${isWinner ? 'مبروك الفوز!' : 'حظاً أوفر!'}</h2>
+                        <p>الفائز: ${winner.name}</p>
+                        <p>الجائزة: ${prize.toLocaleString()} جوهرة</p>
+                        <p>النقاط النهائية:</p>
+                        <p>${p1.name}: ${p1.score} نقطة</p>
+                        <p>${p2.name}: ${p2.score} نقطة</p>
+                `;
+            }
+                        html += `
+                        <div style="margin-top:20px; background:rgba(255,255,255,0.05); padding:15px; border-radius:8px;">
+                            <h4>تفاصيل الأسئلة:</h4>
+                            ${data.gameResults.map((result, index) => `
+                                <div style="text-align:right; margin:5px 0; font-size:0.9rem;">
+                                    السؤال ${index + 1}: ${result.p1Points} - ${result.p2Points}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <button class="action-btn btn-challenge" style="margin-top:20px; width:100%; justify-content:center" onclick="exitGame()">
+                            <i class="fas fa-home"></i> عودة للقائمة
+                        </button>
+                    </div>
+                `;
+            
+            document.getElementById('qText').innerHTML = html;
+            document.getElementById('optionsGrid').innerHTML = "";
+            document.getElementById('timerBar').parentElement.style.display = 'none';
+            document.getElementById('playersStatus').style.display = 'none';
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+        }
+
+        window.exitGame = async () => {
+            document.getElementById('gameArena').style.display = 'none';
+            document.getElementById('membersView').style.display = 'block';
+            document.getElementById('timerBar').parentElement.style.display = 'block';
+            document.getElementById('playersStatus').style.display = 'flex';
+            document.getElementById('timerBar').style.width = '100%';
+            
+            if (gameTimer) {
+                clearInterval(gameTimer);
+                gameTimer = null;
+            }
+            
+            currentRoomId = null;
+            isSpectator = false;
+            mySelectedAnswer = null;
+            
+            if (currentUser) {
+                await updateDoc(doc(db, "users", currentUser.uid), { 
+                    status: 'online', 
+                    currentRoomId: null 
+                });
+            }
+        };
+        window.openChallengesModal = () => document.getElementById('incomingChalModal').style.display = 'flex';
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+    
+    </script>
+</body>
+</html>
